@@ -28,4 +28,13 @@ export const CATALOG_MOCK: readonly Title[] = [
     description:
       'A child’s disappearance uncovers the secrets of several families in a small town.',
   },
+  {
+    id: 4,
+    title: 'Spirited Away',
+    type: 'movie',
+    tags: ['animation', 'anime'],
+    releaseYear: 2001,
+    description:
+      'A young girl enters a mysterious world ruled by spirits and must find a way to save her parents.',
+  },
 ];

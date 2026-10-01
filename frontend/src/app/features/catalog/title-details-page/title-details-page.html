@@ -15,6 +15,12 @@
     </p>
 
     <p>{{ item.description }}</p>
+
+    @if (libraryEntry(); as entry) {
+      <p>In your library · Status: {{ entry.status }}</p>
+    } @else {
+      <button type="button" (click)="addToLibrary()">Add to library</button>
+    }
   </article>
 } @else {
   <section>

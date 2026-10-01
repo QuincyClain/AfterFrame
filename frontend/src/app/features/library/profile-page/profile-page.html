@@ -1,9 +1,9 @@
 <section>
   <h2>My Profile</h2>
-  <p>Rated titles: {{ rankedTitles.length }}</p>
+  <p>Rated titles: {{ rankedTitles().length }}</p>
 
   <ol>
-    @for (item of rankedTitles; track item.title.id) {
+    @for (item of rankedTitles(); track item.title.id) {
       <li>
         <article>
           <h3><a [routerLink]="['/catalog', item.title.id]">{{ item.title.title }}</a></h3>

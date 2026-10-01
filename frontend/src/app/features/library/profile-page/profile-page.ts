@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CatalogData } from '../../catalog/catalog-data';
 import { Title } from '../../catalog/title';
@@ -31,8 +31,9 @@ export class ProfilePage {
 
   protected readonly statusLabels = WATCH_STATUS_LABELS;
 
-  protected readonly rankedTitles: readonly RankedTitle[] = this.libraryData
-      .getRatedEntries()
+  protected readonly rankedTitles = computed<readonly RankedTitle[]>(() =>
+    this.libraryData
+      .ratedEntries()
       .flatMap((entry): RankedTitle[] => {
         const title = this.catalogData.getTitleById(entry.titleId);
 
@@ -41,7 +42,10 @@ export class ProfilePage {
       .sort((left, right) => {
         const ratingDifference = right.entry.rating - left.entry.rating;
 
-        return (ratingDifference || left.title.title.localeCompare(right.title.title)
+        return (
+          ratingDifference ||
+          left.title.title.localeCompare(right.title.title)
         );
-      });
+      }),
+  );
 }

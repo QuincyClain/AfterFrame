@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { LibraryEntry, RatedLibraryEntry } from './library-entry';
 import { LIBRARY_MOCK } from './library-mock';
 
@@ -6,11 +6,34 @@ import { LIBRARY_MOCK } from './library-mock';
   providedIn: 'root',
 })
 export class LibraryData {
-  getEntries(): readonly LibraryEntry[] {
-    return LIBRARY_MOCK;
+  private readonly entriesState =
+    signal<readonly LibraryEntry[]>(LIBRARY_MOCK);
+
+  readonly entries = this.entriesState.asReadonly();
+
+  readonly ratedEntries = computed(() =>
+    this.entries().filter(
+      (entry): entry is RatedLibraryEntry => entry.rating !== null,
+    ),
+  );
+
+  getEntry(titleId: number): LibraryEntry | undefined {
+    return this.entries().find((entry) => entry.titleId === titleId);
   }
 
-  getRatedEntries(): readonly RatedLibraryEntry[] {
-    return this.getEntries().filter((entry): entry is RatedLibraryEntry => entry.rating !== null,);
+  addTitle(titleId: number): void {
+    if (this.getEntry(titleId)) {
+      return;
+    }
+
+    const entry: LibraryEntry = {
+      titleId,
+      status: 'planned',
+      rating: null,
+      review: null,
+      seriesProgress: null,
+    };
+
+    this.entriesState.update((entries) => [...entries, entry]);
   }
 }

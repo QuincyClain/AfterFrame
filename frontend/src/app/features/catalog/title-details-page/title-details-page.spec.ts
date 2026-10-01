@@ -12,7 +12,7 @@ describe('TitleDetailsPage', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TitleDetailsPage);
-    fixture.componentRef.setInput('id', '1');
+    fixture.componentRef.setInput('id', '4');
 
     await fixture.whenStable();
   });
@@ -20,9 +20,22 @@ describe('TitleDetailsPage', () => {
   it('should render the selected title', () => {
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.querySelector('h2')?.textContent).toContain('Interstellar');
+    expect(element.querySelector('h2')?.textContent).toContain('Spirited Away');
     expect(element.textContent).toContain('Movie');
-    expect(element.textContent).toContain('2014');
+    expect(element.textContent).toContain('2001');
     expect(element.querySelector('a')?.getAttribute('href')).toBe('/catalog');
+  });
+
+  it('should add a title to the library', async () => {
+    const element = fixture.nativeElement as HTMLElement;
+    const button = element.querySelector('button');
+
+    expect(button?.textContent).toContain('Add to library');
+
+    button?.click();
+    await fixture.whenStable();
+
+    expect(element.textContent).toContain('In your library');
+    expect(element.textContent).toContain('planned');
   });
 });
