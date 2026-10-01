@@ -1,0 +1,10 @@
+<span class="star-rating" role="img" [attr.aria-label]="label()">
+  @for (star of stars(); track star) {
+    <span class="star" aria-hidden="true">
+      <span class="star__empty">☆</span>
+      <span class="star__fill" [style.width.%]="getFillPercentage(star)">★</span>
+    </span>
+  }
+</span>
+
+<span class="star-rating__value">{{ rating() }} / {{ max() }}</span>
