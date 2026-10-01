@@ -18,6 +18,21 @@
 
     @if (libraryEntry(); as entry) {
       <p>In your library · Status: {{ entry.status }}</p>
+
+      @if (entry.rating !== null) {
+        <p>Rating: {{ entry.rating }} / 10</p>
+      }
+
+      @if (isEditing()) {
+        <app-library-entry-form
+          [entry]="entry"
+          [titleType]="item.type"
+          (entrySaved)="saveEntry($event)"
+          (cancelled)="cancelEditing()"
+        />
+      } @else {
+        <button type="button" (click)="startEditing()">Edit library entry</button>
+      }
     } @else {
       <button type="button" (click)="addToLibrary()">Add to library</button>
     }

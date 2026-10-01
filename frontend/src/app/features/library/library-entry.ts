@@ -1,9 +1,4 @@
-export type WatchStatus =
-  | 'planned'
-  | 'watching'
-  | 'completed'
-  | 'on-hold'
-  | 'dropped';
+export type WatchStatus = 'planned' | 'watching' | 'completed' | 'on-hold' | 'dropped';
 
 export type StarRating =
   | 0.5
@@ -43,3 +38,7 @@ export interface LibraryEntry {
 export type RatedLibraryEntry = LibraryEntry & {
   readonly rating: StarRating;
 };
+
+export function isStarRating(value: number): value is StarRating {
+  return value >= 0.5 && value <= 10 && Number.isInteger(value * 2);
+}

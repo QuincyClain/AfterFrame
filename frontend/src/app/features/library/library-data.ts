@@ -6,15 +6,12 @@ import { LIBRARY_MOCK } from './library-mock';
   providedIn: 'root',
 })
 export class LibraryData {
-  private readonly entriesState =
-    signal<readonly LibraryEntry[]>(LIBRARY_MOCK);
+  private readonly entriesState = signal<readonly LibraryEntry[]>(LIBRARY_MOCK);
 
   readonly entries = this.entriesState.asReadonly();
 
   readonly ratedEntries = computed(() =>
-    this.entries().filter(
-      (entry): entry is RatedLibraryEntry => entry.rating !== null,
-    ),
+    this.entries().filter((entry): entry is RatedLibraryEntry => entry.rating !== null),
   );
 
   getEntry(titleId: number): LibraryEntry | undefined {
@@ -35,5 +32,11 @@ export class LibraryData {
     };
 
     this.entriesState.update((entries) => [...entries, entry]);
+  }
+
+  updateEntry(updatedEntry: LibraryEntry): void {
+    this.entriesState.update((entries) =>
+      entries.map((entry) => (entry.titleId === updatedEntry.titleId ? updatedEntry : entry)),
+    );
   }
 }

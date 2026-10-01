@@ -1,0 +1,41 @@
+.star-rating-input {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.star-rating-input:focus-visible {
+  border-radius: 0.25rem;
+  outline: 0.2rem solid currentColor;
+  outline-offset: 0.25rem;
+}
+
+.star {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+}
+
+.star__empty {
+  color: #a0a0a0;
+}
+
+.star__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  color: #e6a700;
+  white-space: nowrap;
+}
+
+.star-rating-input__value {
+  display: inline-block;
+  min-width: 5rem;
+  margin-left: 0.75rem;
+}

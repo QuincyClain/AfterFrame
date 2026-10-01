@@ -1,0 +1,32 @@
+<form [formGroup]="form" (ngSubmit)="saveChanges()">
+  <div>
+    <label for="watch-status">Status</label>
+
+    <select id="watch-status" formControlName="status">
+      @for (status of statuses; track status.value) {
+        <option [value]="status.value">{{ status.label }}</option>
+      }
+    </select>
+  </div>
+
+  @if (canRate()) {
+    <fieldset>
+      <legend>Rating</legend>
+      <app-star-rating-input
+        [rating]="form.controls.rating.value"
+        (ratingChange)="setRating($event)"
+      />
+
+      @if (form.controls.rating.value === null) {
+        <p>Rating is optional. Choose a value from 0.5 to 10.</p>
+      }
+    </fieldset>
+  } @else {
+    <p>Rating becomes available when this title reaches an eligible watch status.</p>
+  }
+
+  <div>
+    <button type="submit">Save changes</button>
+    <button type="button" (click)="cancel()">Cancel</button>
+  </div>
+</form>

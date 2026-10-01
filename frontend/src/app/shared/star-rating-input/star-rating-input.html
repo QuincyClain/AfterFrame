@@ -1,0 +1,29 @@
+<div
+  class="star-rating-input"
+  role="slider"
+  aria-label="Rating"
+  aria-valuemin="0.5"
+  [attr.aria-valuemax]="max()"
+  [attr.aria-valuenow]="rating()"
+  [attr.aria-valuetext]="label()"
+  [attr.tabindex]="disabled() ? -1 : 0"
+  (mousemove)="previewFromPointer($event)"
+  (mouseleave)="clearPreview()"
+  (click)="selectFromPointer($event)"
+  (keydown)="handleKeydown($event)"
+>
+  @for (star of stars(); track star) {
+    <span class="star" aria-hidden="true">
+      <span class="star__empty">☆</span>
+      <span class="star__fill" [style.width.%]="getFillPercentage(star)">★</span>
+    </span>
+  }
+</div>
+
+<span class="star-rating-input__value" aria-live="polite">
+  @if (displayedRating(); as value) {
+    {{ value }} / {{ max() }}
+  } @else {
+    Not rated
+  }
+</span>
