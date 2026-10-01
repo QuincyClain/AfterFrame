@@ -1,0 +1,15 @@
+<article>
+  <h3>{{ title().title }}</h3>
+
+  <p>
+    @if (title().type === 'movie') {
+      Movie
+    } @else {
+      TV Series
+    }
+
+    · {{ title().releaseYear }}
+  </p>
+
+  <p>{{ title().description }}</p>
+</article>

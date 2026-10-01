@@ -1,14 +1,10 @@
 <section>
-  <h2>Каталог</h2>
-  <p>Произведений: {{ titles.length }}</p>
+  <h2>Catalog</h2>
+  <p>Titles: {{ titles.length }}</p>
 
   @for (item of titles; track item.id) {
-    <article>
-      <h3>{{ item.title }}</h3>
-      <p>Год выпуска: {{ item.releaseYear }}</p>
-      <p>{{ item.description }}</p>
-    </article>
+    <app-title-card [title]="item" />
   } @empty {
-    <p>В каталоге пока нет произведений.</p>
+    <p>The catalog is currently empty.</p>
   }
 </section>
