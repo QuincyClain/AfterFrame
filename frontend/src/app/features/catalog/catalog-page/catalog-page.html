@@ -1,0 +1,14 @@
+<section>
+  <h2>Каталог</h2>
+  <p>Произведений: {{ titles.length }}</p>
+
+  @for (item of titles; track item.id) {
+    <article>
+      <h3>{{ item.title }}</h3>
+      <p>Год выпуска: {{ item.releaseYear }}</p>
+      <p>{{ item.description }}</p>
+    </article>
+  } @empty {
+    <p>В каталоге пока нет произведений.</p>
+  }
+</section>
