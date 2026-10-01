@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '../title';
 import { TitleCard } from './title-card';
+import { provideRouter } from '@angular/router';
 
 describe('TitleCard', () => {
   let fixture: ComponentFixture<TitleCard>;
@@ -17,6 +18,7 @@ describe('TitleCard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TitleCard],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TitleCard);
@@ -31,5 +33,6 @@ describe('TitleCard', () => {
     expect(element.querySelector('h3')?.textContent).toContain('Interstellar');
     expect(element.textContent).toContain('Movie');
     expect(element.textContent).toContain('2014');
+    expect(element.querySelector('a')?.getAttribute('href')).toBe('/catalog/1');
   });
 });

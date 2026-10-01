@@ -1,0 +1,24 @@
+<a routerLink="/catalog">Back to catalog</a>
+
+@if (title(); as item) {
+  <article>
+    <h2>{{ item.title }}</h2>
+
+    <p>
+      @if (item.type === 'movie') {
+        Movie
+      } @else {
+        TV Series
+      }
+
+      · {{ item.releaseYear }}
+    </p>
+
+    <p>{{ item.description }}</p>
+  </article>
+} @else {
+  <section>
+    <h2>Title not found</h2>
+    <p>We could not find a title with ID {{ id() }}.</p>
+  </section>
+}
