@@ -1,0 +1,12 @@
+nav {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: inherit;
+}
+
+nav a.active {
+  font-weight: 700;
+}

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { CatalogPage } from './features/catalog/catalog-page/catalog-page';
 
 export const routes: Routes = [
   {
@@ -9,6 +8,20 @@ export const routes: Routes = [
   },
   {
     path: 'catalog',
-    component: CatalogPage,
+    loadComponent: () =>
+      import('./features/catalog/catalog-page/catalog-page').then(
+        (module) => module.CatalogPage,
+      ),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/library/profile-page/profile-page').then(
+        (module) => module.ProfilePage,
+      ),
+  },
+  {
+    path: '**',
+    redirectTo: 'catalog',
   },
 ];

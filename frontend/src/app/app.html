@@ -1,6 +1,11 @@
 <header>
   <h1>{{ title() }}</h1>
   <p>Your movie journey, rated and remembered.</p>
+
+  <nav aria-label="Primary navigation">
+    <a routerLink="/catalog" routerLinkActive="active" ariaCurrentWhenActive="page">Catalog</a>
+    <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">My Profile</a>
+  </nav>
 </header>
 
 <main>
