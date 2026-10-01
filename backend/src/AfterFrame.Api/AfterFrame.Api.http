@@ -1,0 +1,6 @@
+@AfterFrame.Api_HostAddress = http://localhost:5001
+
+GET {{AfterFrame.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
