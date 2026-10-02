@@ -1,0 +1,344 @@
+:host {
+  display: block;
+}
+
+.catalog-page {
+  min-height: calc(100vh - 4.5rem);
+}
+
+.catalog-hero {
+  min-height: 16rem;
+  background-image: var(--hero-overlay), url('/images/catalog-hero.png');
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
+.hero-content,
+.catalog-content {
+  width: calc(100% - clamp(2rem, 4vw, 5rem));
+  max-width: 116rem;
+  margin-inline: auto;
+}
+
+.hero-content {
+  padding-block: 2.25rem 2rem;
+}
+
+.hero-content h1 {
+  max-width: 46rem;
+  margin: 0 0 0.35rem;
+  font-size: clamp(2.35rem, 5vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.hero-lead,
+.hero-support {
+  margin: 0;
+}
+
+.hero-lead {
+  color: #ffe0a4;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+}
+
+.hero-support {
+  margin-top: 0.15rem;
+  color: rgb(255 255 255 / 76%);
+}
+
+.catalog-search {
+  display: flex;
+  width: min(100%, 47rem);
+  min-height: 3.25rem;
+  margin-top: 1.4rem;
+  padding: 0.35rem 0.4rem 0.35rem 1rem;
+  align-items: center;
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: 0.7rem;
+  background: var(--search-bg);
+  backdrop-filter: blur(8px);
+  gap: 0.7rem;
+}
+
+.catalog-search > span {
+  color: rgb(255 255 255 / 75%);
+  font-size: 1.6rem;
+}
+
+.catalog-search input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  flex: 1;
+}
+
+.catalog-search input::placeholder {
+  color: rgb(255 255 255 / 60%);
+}
+
+.catalog-search button,
+.catalog-state button,
+.pagination button {
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.catalog-search button {
+  align-self: stretch;
+  padding-inline: 1.25rem;
+}
+
+.catalog-search button:hover,
+.catalog-state button:hover,
+.pagination button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.catalog-content {
+  padding-block: 1.5rem 3rem;
+}
+
+.catalog-toolbar {
+  display: flex;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.catalog-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  white-space: nowrap;
+}
+
+.catalog-heading h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.25rem);
+  letter-spacing: -0.035em;
+}
+
+.catalog-heading span {
+  color: var(--muted);
+}
+
+.catalog-filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.catalog-filters > button,
+.sort-control > button {
+  min-height: 2.65rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--surface-elevated);
+  color: var(--text);
+}
+
+.catalog-filters > button {
+  padding-inline: 1rem;
+  cursor: pointer;
+}
+
+.catalog-filters > button:hover {
+  border-color: var(--accent);
+}
+
+.catalog-filters > button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.sort-control {
+  position: relative;
+}
+
+.sort-control > button {
+  display: flex;
+  min-width: 11.25rem;
+  padding: 0 0.85rem;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.45rem;
+}
+
+.sort-control > button:hover,
+.sort-control > button[aria-expanded='true'] {
+  border-color: var(--accent);
+}
+
+.sort-control > button span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.sort-control > button strong {
+  font-weight: 650;
+}
+
+.sort-control > button i {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: auto;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15rem) rotate(45deg);
+  transition: transform 150ms ease;
+}
+
+.sort-control > button[aria-expanded='true'] i {
+  transform: translateY(0.15rem) rotate(225deg);
+}
+
+.sort-menu {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  width: 100%;
+  min-width: 11.25rem;
+  padding: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.sort-menu button {
+  display: flex;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.sort-menu button:hover,
+.sort-menu button.active {
+  background: var(--surface-soft);
+}
+
+.sort-check {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.catalog-state {
+  padding: 4rem 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.catalog-state button {
+  margin-top: 0.75rem;
+  padding: 0.65rem 1rem;
+}
+
+.pagination {
+  display: flex;
+  margin-top: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pagination span {
+  color: var(--muted);
+}
+
+.pagination button {
+  padding: 0.6rem 0.9rem;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 100rem) {
+  .catalog-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 68rem) {
+  .catalog-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 56rem) {
+  .catalog-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .catalog-filters {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 48rem) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 37.5rem) {
+  .catalog-hero {
+    min-height: 18rem;
+    background-position: 62% center;
+  }
+
+  .catalog-search button {
+    padding-inline: 0.8rem;
+  }
+
+  .catalog-filters {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .catalog-filters > button:last-of-type,
+  .sort-control {
+    grid-column: 1 / -1;
+  }
+
+  .sort-control > button,
+  .sort-menu {
+    width: 100%;
+  }
+}
+
+@media (max-width: 36rem) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

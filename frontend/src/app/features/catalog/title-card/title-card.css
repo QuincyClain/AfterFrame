@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.title-card {
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.title-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-0.2rem);
+}
+
+.poster {
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 2 / 3;
+  background: var(--surface-soft);
+  color: var(--muted);
+  text-decoration: none;
+  place-items: center;
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.title-card:hover .poster img {
+  transform: scale(1.025);
+}
+
+.poster-placeholder {
+  font-size: 0.9rem;
+}
+
+.title-card-content {
+  padding: 0.85rem 0.9rem 1rem;
+}
+
+.title-meta,
+.rating {
+  margin: 0;
+}
+
+.title-meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.title-card h3 {
+  min-height: 2.8rem;
+  margin: 0.25rem 0 0.6rem;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.title-card h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.title-card h3 a:hover {
+  color: var(--accent);
+}
+
+.genres {
+  display: flex;
+  min-height: 1.6rem;
+  margin-bottom: 0.75rem;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+
+.genres span {
+  overflow: hidden;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rating {
+  color: var(--text);
+  font-weight: 750;
+}
+
+.rating > span:first-child {
+  color: var(--rating);
+  font-size: 1.15rem;
+}
+
+.vote-count {
+  margin-left: 0.25rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 400;
+}

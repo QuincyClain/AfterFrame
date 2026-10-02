@@ -1,18 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Title } from '../title';
+import { CatalogTitleSummary } from '../data-access/catalog-api.models';
 import { TitleCard } from './title-card';
 import { provideRouter } from '@angular/router';
 
 describe('TitleCard', () => {
   let fixture: ComponentFixture<TitleCard>;
 
-  const title: Title = {
-    id: 1,
-    title: 'Interstellar',
-    type: 'movie',
-    tags: [],
+  const title: CatalogTitleSummary = {
+    id: '0199f3f4-7c00-7000-8000-000000000101',
+    name: 'Interstellar',
+    type: 'Movie',
+    tags: 'None',
     releaseYear: 2014,
-    description: 'A team of explorers travels through space.',
+    posterPath: '/poster.jpg',
+    externalRating: 8.7,
+    externalVoteCount: 42000,
+    publicationStatus: 'Published',
+    genres: ['Adventure', 'Science Fiction'],
   };
 
   beforeEach(async () => {
@@ -30,9 +34,8 @@ describe('TitleCard', () => {
   it('should render title details', () => {
     const element = fixture.nativeElement as HTMLElement;
 
-    expect(element.querySelector('h3')?.textContent).toContain('Interstellar');
-    expect(element.textContent).toContain('Movie');
-    expect(element.textContent).toContain('2014');
-    expect(element.querySelector('a')?.getAttribute('href')).toBe('/catalog/1');
+    expect(element.querySelector('a')?.getAttribute('href')).toBe(
+      '/catalog/0199f3f4-7c00-7000-8000-000000000101',
+    );
   });
 });

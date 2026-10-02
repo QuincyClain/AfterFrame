@@ -1,15 +1,35 @@
-<article>
-  <h3><a [routerLink]="['/catalog', title().id]">{{ title().title }}</a></h3>
-
-  <p>
-    @if (title().type === 'movie') {
-      Movie
+<article class="title-card">
+  <a class="poster" [routerLink]="['/catalog', title().id]">
+    @if (posterUrl(); as url) {
+      <img [src]="url" [alt]="title().name + ' poster'" loading="lazy" />
     } @else {
-      TV Series
+      <span class="poster-placeholder">No poster</span>
+    }
+  </a>
+
+  <div class="title-card-content">
+    <p class="title-meta">
+      {{ title().type === 'Movie' ? 'Movie' : 'TV Series' }} · {{ title().releaseYear }}
+    </p>
+
+    <h3>
+      <a [routerLink]="['/catalog', title().id]">{{ title().name }}</a>
+    </h3>
+
+    @if (title().genres.length > 0) {
+      <div class="genres" aria-label="Genres">
+        @for (genre of title().genres.slice(0, 2); track genre) {
+          <span>{{ genre }}</span>
+        }
+      </div>
     }
 
-    · {{ title().releaseYear }}
-  </p>
-
-  <p>{{ title().description }}</p>
+    @if (title().externalRating !== null) {
+      <p class="rating">
+        <span aria-hidden="true">★</span>
+        {{ title().externalRating | number: '1.1-1' }}
+        <span class="vote-count">({{ title().externalVoteCount }} votes)</span>
+      </p>
+    }
+  </div>
 </article>

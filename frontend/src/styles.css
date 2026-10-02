@@ -1,1 +1,137 @@
-/* You can add global styles to this file, and also import other style files */
+:root,
+:root[data-theme='midnight'] {
+  color-scheme: light;
+  --page-bg: #f8f7f2;
+  --surface-elevated: #ffffff;
+  --surface-soft: #eef2f1;
+  --text: #102334;
+  --muted: #6d7883;
+  --border: #dce2e2;
+  --header-bg: #071d2d;
+  --header-text: #f8fbfc;
+  --header-muted: #bdcbd3;
+  --header-border: rgb(255 255 255 / 10%);
+  --header-control-bg: rgb(255 255 255 / 7%);
+  --header-control-hover: rgb(255 255 255 / 13%);
+  --accent: #187f82;
+  --accent-hover: #116b6e;
+  --accent-header: #42b5b3;
+  --accent-contrast: #ffffff;
+  --rating: #ee9f00;
+  --hero-overlay: linear-gradient(
+    90deg,
+    rgb(4 18 29 / 96%) 0%,
+    rgb(4 18 29 / 83%) 43%,
+    rgb(4 18 29 / 28%) 100%
+  );
+  --search-bg: rgb(255 255 255 / 10%);
+  --shadow-sm: 0 5px 18px rgb(12 34 47 / 8%);
+  --shadow-lg: 0 20px 45px rgb(12 26 37 / 18%);
+}
+
+:root[data-theme='velvet'] {
+  --page-bg: #faf7f1;
+  --surface-elevated: #fffdfa;
+  --surface-soft: #f3ebe7;
+  --text: #2b181b;
+  --muted: #796a6b;
+  --border: #e6dcd7;
+  --header-bg: #201416;
+  --header-text: #fffaf5;
+  --header-muted: #d3c5c3;
+  --header-border: rgb(255 244 238 / 11%);
+  --header-control-bg: rgb(255 244 238 / 7%);
+  --header-control-hover: rgb(255 244 238 / 13%);
+  --accent: #8e2638;
+  --accent-hover: #741d2c;
+  --accent-header: #bb4555;
+  --accent-contrast: #ffffff;
+  --rating: #d89520;
+  --hero-overlay: linear-gradient(
+    90deg,
+    rgb(28 14 16 / 97%) 0%,
+    rgb(28 14 16 / 84%) 43%,
+    rgb(28 14 16 / 35%) 100%
+  );
+  --search-bg: rgb(255 246 239 / 10%);
+  --shadow-sm: 0 5px 18px rgb(54 30 30 / 9%);
+  --shadow-lg: 0 20px 45px rgb(44 23 26 / 20%);
+}
+
+:root[data-theme='indigo'] {
+  --page-bg: #f6f7fc;
+  --surface-elevated: #ffffff;
+  --surface-soft: #eef0fa;
+  --text: #191c3a;
+  --muted: #70738f;
+  --border: #dfe2f1;
+  --header-bg: #171735;
+  --header-text: #fbfaff;
+  --header-muted: #c7c6df;
+  --header-border: rgb(239 238 255 / 11%);
+  --header-control-bg: rgb(239 238 255 / 7%);
+  --header-control-hover: rgb(239 238 255 / 13%);
+  --accent: #5266d5;
+  --accent-hover: #4154bd;
+  --accent-header: #7182ee;
+  --accent-contrast: #ffffff;
+  --rating: #ef7656;
+  --hero-overlay: linear-gradient(
+    90deg,
+    rgb(20 20 51 / 97%) 0%,
+    rgb(20 20 51 / 83%) 43%,
+    rgb(20 20 51 / 31%) 100%
+  );
+  --search-bg: rgb(238 238 255 / 11%);
+  --shadow-sm: 0 5px 18px rgb(31 31 74 / 8%);
+  --shadow-lg: 0 20px 45px rgb(24 24 62 / 19%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  background: var(--page-bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select {
+  outline-color: var(--accent);
+  outline-offset: 3px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}

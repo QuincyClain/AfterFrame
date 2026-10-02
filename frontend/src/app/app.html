@@ -1,13 +1,19 @@
-<header>
-  <h1>{{ title() }}</h1>
-  <p>Your movie journey, rated and remembered.</p>
+<header class="site-header">
+  <div class="header-shell">
+    <a class="brand" routerLink="/catalog" aria-label="AfterFrame home">After<span>Frame</span></a>
 
-  <nav aria-label="Primary navigation">
-    <a routerLink="/catalog" routerLinkActive="active" ariaCurrentWhenActive="page">Catalog</a>
-    <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">My Profile</a>
-  </nav>
+    <nav aria-label="Primary navigation">
+      <a routerLink="/catalog" routerLinkActive="active" ariaCurrentWhenActive="page">Catalog</a>
+      <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">My Profile</a>
+    </nav>
+
+    <div class="header-actions">
+      <app-theme-switcher />
+      <a class="avatar" routerLink="/profile" aria-label="Open my profile">AF</a>
+    </div>
+  </div>
 </header>
 
-<main>
+<main id="main-content">
   <router-outlet />
 </main>

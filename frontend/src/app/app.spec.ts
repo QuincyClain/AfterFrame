@@ -23,6 +23,6 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('h1')?.textContent).toContain('AfterFrame');
+    expect(compiled.querySelector('.brand')?.textContent).toContain('AfterFrame');
   });
 });

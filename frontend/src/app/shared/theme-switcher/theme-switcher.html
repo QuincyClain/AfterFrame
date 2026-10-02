@@ -1,0 +1,31 @@
+<div class="theme-switcher">
+  <button
+    class="theme-trigger"
+    type="button"
+    aria-label="Choose color theme"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+  >
+    <span class="theme-trigger-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  @if (isOpen()) {
+    <div class="theme-menu" role="menu" aria-label="Color themes">
+      @for (theme of themeService.themes; track theme.id) {
+        <button
+          type="button"
+          role="menuitemradio"
+          [class.active]="themeService.activeTheme() === theme.id"
+          [attr.aria-checked]="themeService.activeTheme() === theme.id"
+          (click)="selectTheme(theme.id)"
+        >
+          <span class="theme-swatch" [class]="'theme-swatch ' + theme.id" aria-hidden="true"></span>
+          <span>{{ theme.label }}</span>
+          @if (themeService.activeTheme() === theme.id) {
+            <span class="check" aria-hidden="true">✓</span>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>
