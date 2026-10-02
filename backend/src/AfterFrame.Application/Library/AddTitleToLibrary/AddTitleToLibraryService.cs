@@ -3,18 +3,22 @@ using AfterFrame.Application.Common.Persistence;
 using AfterFrame.Application.Titles;
 using AfterFrame.Application.Users;
 using AfterFrame.Domain.Library;
+using AfterFrame.Application.Common.Identity;
 
 namespace AfterFrame.Application.Library.AddTitleToLibrary;
 
 public sealed class AddTitleToLibraryService(
+    ICurrentUser currentUser,
     IUserRepository users,
     ITitleRepository titles,
     ILibraryEntryRepository libraryEntries,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
 {
-    public async Task<LibraryEntry> ExecuteAsync(Guid userId, Guid titleId, CancellationToken cancellationToken = default)
+    public async Task<LibraryEntry> ExecuteAsync(Guid titleId, CancellationToken cancellationToken = default)
     {
+        var userId = currentUser.UserId;
+
         if (!await users.ExistsAsync(userId, cancellationToken))
         {
             throw new EntityNotFoundException("User", userId);
