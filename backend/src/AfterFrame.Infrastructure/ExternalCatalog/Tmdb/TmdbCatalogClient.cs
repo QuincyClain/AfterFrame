@@ -114,6 +114,7 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
             releaseYear.Value,
             movie.Overview.Trim(),
             movie.PosterPath,
+            movie.BackdropPath,
             GetRating(movie.VoteAverage, movie.VoteCount),
             movie.VoteCount,
             MapGenres(movie.GenreIds, genres));
@@ -139,6 +140,7 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
             releaseYear.Value,
             series.Overview.Trim(),
             series.PosterPath,
+            series.BackdropPath,
             GetRating(series.VoteAverage, series.VoteCount),
             series.VoteCount,
             MapGenres(series.GenreIds, genres));

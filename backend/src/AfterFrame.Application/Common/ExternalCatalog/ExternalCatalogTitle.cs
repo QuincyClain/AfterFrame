@@ -11,6 +11,7 @@ public sealed record ExternalCatalogTitle(
     int ReleaseYear,
     string Description,
     string? PosterPath,
+    string? BackdropPath,
     decimal? ExternalRating,
     int ExternalVoteCount,
     IReadOnlyList<ExternalCatalogGenre> Genres);

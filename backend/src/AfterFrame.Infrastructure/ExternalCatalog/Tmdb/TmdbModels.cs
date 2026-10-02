@@ -43,6 +43,9 @@ internal sealed class TmdbMovie
     [JsonPropertyName("poster_path")]
     public string? PosterPath { get; init; }
 
+    [JsonPropertyName("backdrop_path")]
+    public string? BackdropPath { get; init; }
+
     [JsonPropertyName("vote_average")]
     public decimal VoteAverage { get; init; }
 
@@ -75,6 +78,9 @@ internal sealed class TmdbSeries
 
     [JsonPropertyName("poster_path")]
     public string? PosterPath { get; init; }
+
+    [JsonPropertyName("backdrop_path")]
+    public string? BackdropPath { get; init; }
 
     [JsonPropertyName("vote_average")]
     public decimal VoteAverage { get; init; }

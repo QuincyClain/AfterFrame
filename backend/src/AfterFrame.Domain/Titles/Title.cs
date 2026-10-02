@@ -24,6 +24,8 @@ public sealed class Title
 
     public string? PosterPath { get; private set; }
 
+    public string? BackdropPath { get; private set; }
+
     public decimal? ExternalRating { get; private set; }
 
     public int ExternalVoteCount { get; private set; }
@@ -53,6 +55,7 @@ public sealed class Title
         int releaseYear,
         string description,
         string? posterPath,
+        string? backdropPath,
         decimal? externalRating,
         int externalVoteCount,
         string externalSource,
@@ -70,7 +73,8 @@ public sealed class Title
             Tags = tags,
             ReleaseYear = releaseYear,
             Description = description.Trim(),
-            PosterPath = NormalizePosterPath(posterPath),
+            PosterPath = NormalizeImagePath(posterPath),
+            BackdropPath = NormalizeImagePath(backdropPath),
             ExternalRating = externalRating,
             ExternalVoteCount = externalVoteCount,
             Origin = TitleOrigin.External,
@@ -121,6 +125,7 @@ public sealed class Title
         int releaseYear,
         string description,
         string? posterPath,
+        string? backdropPath,
         decimal? externalRating,
         int externalVoteCount,
         DateTimeOffset updatedAtUtc)
@@ -138,7 +143,8 @@ public sealed class Title
         Tags = tags;
         ReleaseYear = releaseYear;
         Description = description.Trim();
-        PosterPath = NormalizePosterPath(posterPath);
+        PosterPath = NormalizeImagePath(posterPath);
+        BackdropPath = NormalizeImagePath(backdropPath);
         ExternalRating = externalRating;
         ExternalVoteCount = externalVoteCount;
         UpdatedAtUtc = updatedAtUtc;
@@ -204,8 +210,8 @@ public sealed class Title
         }
     }
 
-    private static string? NormalizePosterPath(string? posterPath)
+    private static string? NormalizeImagePath(string? imagePath)
     {
-        return string.IsNullOrWhiteSpace(posterPath) ? null : posterPath.Trim();
+        return string.IsNullOrWhiteSpace(imagePath) ? null : imagePath.Trim();
     }
 }

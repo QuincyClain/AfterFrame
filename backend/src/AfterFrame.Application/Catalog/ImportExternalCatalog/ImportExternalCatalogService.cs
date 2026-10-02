@@ -99,6 +99,7 @@ public sealed class ImportExternalCatalogService(
                     externalTitle.ReleaseYear,
                     externalTitle.Description,
                     externalTitle.PosterPath,
+                    externalTitle.BackdropPath,
                     externalTitle.ExternalRating,
                     externalTitle.ExternalVoteCount,
                     now);
@@ -116,6 +117,7 @@ public sealed class ImportExternalCatalogService(
                 externalTitle.ReleaseYear,
                 externalTitle.Description,
                 externalTitle.PosterPath,
+                externalTitle.BackdropPath,
                 externalTitle.ExternalRating,
                 externalTitle.ExternalVoteCount,
                 externalTitle.Source,

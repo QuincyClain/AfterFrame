@@ -1,74 +1,100 @@
-<main class="details-page">
-  <a class="back-link" routerLink="/catalog"><span aria-hidden="true">←</span> Back to catalog</a>
-
+<main>
   @if (isLoading()) {
-    <section class="page-state" aria-live="polite">
-      <span class="loader" aria-hidden="true"></span>
-      <h1>Loading title</h1>
-      <p>Getting the latest catalog information.</p>
-    </section>
+    <div class="state-shell">
+      <section class="page-state" aria-live="polite">
+        <span class="loader" aria-hidden="true"></span>
+        <h1>Loading title</h1>
+        <p>Getting the latest catalog information.</p>
+      </section>
+    </div>
   } @else if (isNotFound()) {
-    <section class="page-state">
-      <p class="state-label">404</p>
-      <h1>Title not found</h1>
-      <p>This title does not exist or is not available in the catalog.</p>
-      <a routerLink="/catalog">Return to catalog</a>
-    </section>
+    <div class="state-shell">
+      <section class="page-state">
+        <p class="state-label">404</p>
+        <h1>Title not found</h1>
+        <p>This title does not exist or is not available in the catalog.</p>
+        <a routerLink="/catalog">Return to catalog</a>
+      </section>
+    </div>
   } @else if (errorMessage()) {
-    <section class="page-state" role="alert">
-      <p class="state-label">Something went wrong</p>
-      <h1>Unable to load title</h1>
-      <p>{{ errorMessage() }}</p>
-      <button type="button" (click)="retry()">Try again</button>
-    </section>
+    <div class="state-shell">
+      <section class="page-state" role="alert">
+        <p class="state-label">Something went wrong</p>
+        <h1>Unable to load title</h1>
+        <p>{{ errorMessage() }}</p>
+        <button type="button" (click)="retry()">Try again</button>
+      </section>
+    </div>
   } @else if (title(); as item) {
     <article class="title-details">
-      <div class="poster">
-        @if (posterUrl(); as url) {
-          <img [src]="url" [alt]="item.name + ' poster'" />
-        } @else {
-          <span>No poster available</span>
-        }
-      </div>
+      <section class="title-hero" [style.background-image]="backdropBackground()">
+        <div class="hero-shell">
+          <a class="back-link" routerLink="/catalog">
+            <span aria-hidden="true">←</span>
+            Back to catalog
+          </a>
 
-      <div class="title-content">
-        <p class="title-meta">
-          {{ item.type === 'Movie' ? 'Movie' : 'TV Series' }} · {{ item.releaseYear }}
-        </p>
-
-        <h1>{{ item.name }}</h1>
-
-        @if (item.genres.length > 0) {
-          <div class="genres" aria-label="Genres">
-            @for (genre of item.genres; track genre) {
-              <span>{{ genre }}</span>
-            }
-          </div>
-        }
-
-        @if (item.externalRating !== null) {
-          <div class="rating">
-            <span class="rating-star" aria-hidden="true">★</span>
-
-            <div>
-              <strong>{{ item.externalRating | number: '1.1-1' }}</strong>
-              <span>/ 10</span>
+          <div class="title-layout">
+            <div class="poster">
+              @if (posterUrl(); as url) {
+                <img [src]="url" [alt]="item.name + ' poster'" />
+              } @else {
+                <span>No poster available</span>
+              }
             </div>
 
-            <p>{{ item.externalVoteCount | number: '1.0-0' }} external votes</p>
+            <div class="title-content">
+              <p class="title-meta">
+                {{ item.type === 'Movie' ? 'Movie' : 'TV Series' }} · {{ item.releaseYear }}
+              </p>
+
+              <h1>{{ item.name }}</h1>
+
+              @if (item.genres.length > 0) {
+                <div class="genres" aria-label="Genres">
+                  @for (genre of item.genres; track genre) {
+                    <span>{{ genre }}</span>
+                  }
+                </div>
+              }
+
+              @if (item.externalRating !== null) {
+                <div class="rating">
+                  <div
+                    class="score-ring"
+                    [style.background]="scoreBackground()"
+                    [attr.aria-label]="'External rating ' + item.externalRating + ' out of 10'"
+                  >
+                    <span>{{ item.externalRating | number: '1.1-1' }}</span>
+                  </div>
+
+                  <div class="rating-copy">
+                    <strong>External score</strong>
+                    <span>{{ item.externalVoteCount | number: '1.0-0' }} votes</span>
+                  </div>
+                </div>
+              }
+
+              <section class="overview">
+                <h2>Overview</h2>
+
+                @if (item.description) {
+                  <p>{{ item.description }}</p>
+                } @else {
+                  <p>No description is available for this title.</p>
+                }
+              </section>
+
+              @if (item.externalSource === 'tmdb') {
+                <p class="source-note">Catalog information provided by TMDB.</p>
+              }
+            </div>
           </div>
-        }
-
-        <section class="overview">
-          <h2>Overview</h2>
-
-          @if (item.description) {
-            <p>{{ item.description }}</p>
-          } @else {
-            <p>No description is available for this title.</p>
-          }
-        </section>
-      </div>
+        </div>
+      </section>
+      <section class="title-body">
+        <div class="title-body-shell"></div>
+      </section>
     </article>
   }
 </main>

@@ -32,6 +32,7 @@ export interface CatalogTitleSummary {
 
 export interface CatalogTitleDetails extends CatalogTitleSummary {
   readonly description: string;
+  readonly backdropPath: string | null;
   readonly origin: 'External' | 'UserCreated';
   readonly externalSource: string | null;
 }

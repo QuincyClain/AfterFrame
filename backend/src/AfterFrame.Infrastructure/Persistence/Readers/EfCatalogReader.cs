@@ -90,6 +90,7 @@ internal sealed class EfCatalogReader(AfterFrameDbContext dbContext) : ICatalogR
                 title.ReleaseYear,
                 title.Description,
                 title.PosterPath,
+                title.BackdropPath,
                 title.ExternalRating,
                 title.ExternalVoteCount,
                 title.Origin,

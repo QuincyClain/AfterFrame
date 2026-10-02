@@ -21,6 +21,7 @@ describe('TitleDetailsPage', () => {
     description:
       'A young girl enters a mysterious world ruled by spirits and must find a way to save her parents.',
     posterPath: '/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
+    backdropPath: '/x2RS3uTcsJJ9IfjNPcgDmukoEcQ.jpg',
     externalRating: 8.5,
     externalVoteCount: 17349,
     origin: 'External',
@@ -66,6 +67,9 @@ describe('TitleDetailsPage', () => {
     expect(element.textContent).toContain('8.5');
     expect(element.textContent).toContain('Adventure');
     expect(element.querySelector('.back-link')?.getAttribute('href')).toBe('/catalog');
+    expect(element.querySelector<HTMLElement>('.title-hero')?.style.backgroundImage).toContain(
+      title.backdropPath,
+    );
   });
 
   it('should render a not-found state for an unavailable title', async () => {

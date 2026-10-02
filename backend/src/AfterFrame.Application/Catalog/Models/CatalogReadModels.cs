@@ -22,6 +22,7 @@ public sealed record CatalogTitleDetails(
     int ReleaseYear,
     string Description,
     string? PosterPath,
+    string? BackdropPath,
     decimal? ExternalRating,
     int ExternalVoteCount,
     TitleOrigin Origin,

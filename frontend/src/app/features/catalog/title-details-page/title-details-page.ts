@@ -28,6 +28,19 @@ export class TitleDetailsPage {
     return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : null;
   });
 
+  protected readonly backdropBackground = computed(() => {
+    const backdropPath = this.title()?.backdropPath;
+
+    return backdropPath ? `url("https://image.tmdb.org/t/p/w1280${backdropPath}")` : null;
+  });
+
+  protected readonly scoreBackground = computed(() => {
+    const rating = this.title()?.externalRating ?? 0;
+    const percentage = Math.round(rating * 10);
+
+    return `conic-gradient(var(--rating) ${percentage}%, rgb(255 255 255 / 18%) 0)`;
+  });
+
   constructor() {
     effect((onCleanup) => {
       this.reloadVersion();

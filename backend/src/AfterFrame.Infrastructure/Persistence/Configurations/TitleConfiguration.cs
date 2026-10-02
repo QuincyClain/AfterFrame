@@ -96,6 +96,10 @@ internal sealed class TitleConfiguration
             .HasColumnName("poster_path")
             .HasMaxLength(500);
 
+        builder.Property(title => title.BackdropPath)
+            .HasColumnName("backdrop_path")
+            .HasMaxLength(500);
+
         builder.Property(title => title.ExternalRating)
             .HasColumnName("external_rating")
             .HasPrecision(5, 3);
