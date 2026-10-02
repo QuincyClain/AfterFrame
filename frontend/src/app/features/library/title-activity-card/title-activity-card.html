@@ -1,1 +1,22 @@
-<p>title-activity-card works!</p>
+<section class="activity-card" aria-labelledby="activity-heading">
+  <header class="activity-header">
+    <div>
+      <p class="eyebrow">Personal tracking</p>
+      <h2 id="activity-heading">Your activity</h2>
+    </div>
+
+    <span class="library-state">Not in library</span>
+  </header>
+
+  <div class="empty-state">
+    <span class="empty-icon" aria-hidden="true">◷</span>
+
+    <div>
+      <h3>No activity yet</h3>
+      <p>
+        Use the actions above to add this {{ titleType() === 'Series' ? 'series' : 'movie' }}
+        to your library and start tracking it.
+      </p>
+    </div>
+  </div>
+</section>

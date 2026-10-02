@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CatalogTitleDetails } from '../../data-access/catalog-api.models';
 
 @Component({
-  imports: [],
   selector: 'app-title-facts',
-  styleUrl: './title-facts.css',
+  imports: [],
   templateUrl: './title-facts.html',
+  styleUrl: './title-facts.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TitleFacts {}
+export class TitleFacts {
+  readonly title = input.required<CatalogTitleDetails>();
+}

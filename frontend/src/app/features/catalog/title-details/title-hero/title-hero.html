@@ -59,6 +59,33 @@
           }
         </section>
 
+        <div class="hero-actions" aria-label="Title actions">
+          <button class="hero-action primary-action" type="button" (click)="addToLibrary.emit()">
+            <span aria-hidden="true">＋</span>
+            Add to library
+          </button>
+
+          <button
+            class="hero-action favourite-action"
+            type="button"
+            aria-label="Mark as favorite"
+            data-tooltip="Mark as favorite"
+            (click)="addToFavourites.emit()"
+          >
+            <span aria-hidden="true">♥</span>
+          </button>
+
+          <button class="hero-action" type="button" (click)="rateAndReview.emit()">
+            <span aria-hidden="true">★</span>
+            Rate & review
+          </button>
+
+          <button class="hero-action" type="button" (click)="playTrailer.emit()">
+            <span aria-hidden="true">▶</span>
+            Play trailer
+          </button>
+        </div>
+
         @if (title().externalSource === 'tmdb') {
           <p class="source-note">Catalog information provided by TMDB.</p>
         }

@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+
+.activity-card {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.activity-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.activity-header h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.5vw, 1.8rem);
+  letter-spacing: -0.035em;
+}
+
+.library-state {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.empty-state {
+  display: grid;
+  margin-top: 1.75rem;
+  align-items: center;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.empty-icon {
+  display: grid;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--accent);
+  font-size: 1.7rem;
+  font-weight: 500;
+  place-items: center;
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.empty-state p {
+  max-width: 42rem;
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 30rem) {
+  .activity-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .library-state {
+    align-self: flex-start;
+  }
+}

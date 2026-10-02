@@ -5,10 +5,12 @@ import { CatalogApi } from '../data-access/catalog-api';
 import { CatalogTitleDetails } from '../data-access/catalog-api.models';
 import { TitleHero } from '../title-details/title-hero/title-hero';
 import { TitleSectionNav } from '../title-details/title-section-nav/title-section-nav';
+import { TitleFacts } from '../title-details/title-facts/title-facts';
+import { TitleActivityCard } from '../../library/title-activity-card/title-activity-card';
 
 @Component({
   selector: 'app-title-details-page',
-  imports: [RouterLink, TitleHero, TitleSectionNav],
+  imports: [RouterLink, TitleHero, TitleSectionNav, TitleFacts, TitleActivityCard],
   templateUrl: './title-details-page.html',
   styleUrl: './title-details-page.css',
 })

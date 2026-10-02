@@ -214,6 +214,94 @@
   line-height: 1.7;
 }
 
+.hero-actions {
+  display: flex;
+  margin-top: 1.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hero-action {
+  display: inline-flex;
+  min-height: 3rem;
+  padding-inline: 1.15rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 999px;
+  background: rgb(6 17 25 / 42%);
+  color: var(--header-text);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  font-weight: 750;
+  gap: 0.5rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.hero-action:hover {
+  border-color: var(--accent-header);
+  background: rgb(6 17 25 / 70%);
+  transform: translateY(-0.1rem);
+}
+
+.hero-action.primary-action {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.hero-action.primary-action:hover {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
+}
+
+.favourite-action {
+  position: relative;
+  width: 3rem;
+  padding: 0;
+  flex: 0 0 3rem;
+}
+
+.favourite-action span {
+  color: var(--accent-header);
+  font-size: 1.35rem;
+}
+
+.favourite-action::after {
+  position: absolute;
+  bottom: calc(100% + 0.65rem);
+  left: 50%;
+  z-index: 5;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 0.4rem;
+  background: rgb(6 17 25 / 92%);
+  color: #fff;
+  content: attr(data-tooltip);
+  font-size: 0.75rem;
+  font-weight: 650;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0.25rem);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    visibility 140ms ease;
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+.favourite-action:hover::after,
+.favourite-action:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
 .source-note {
   margin: 1.5rem 0 0;
   color: rgb(255 255 255 / 48%);
@@ -261,5 +349,13 @@
 
   .overview {
     margin-top: 1.6rem;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+  }
+
+  .hero-action:not(.favourite-action) {
+    flex: 1 1 10rem;
   }
 }

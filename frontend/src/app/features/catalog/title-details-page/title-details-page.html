@@ -32,7 +32,13 @@
       <app-title-section-nav [showEpisodes]="item.type === 'Series'" />
 
       <section class="title-body">
-        <div class="title-body-shell"></div>
+        <div class="title-body-shell">
+          <div class="title-main-column">
+            <app-title-activity-card [titleType]="item.type" />
+          </div>
+
+          <app-title-facts id="details" [title]="item" />
+        </div>
       </section>
     </article>
   }

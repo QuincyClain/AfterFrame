@@ -80,10 +80,24 @@
 }
 
 .title-body-shell {
+  display: grid;
   width: calc(100% - clamp(2rem, 4vw, 5rem));
   max-width: 116rem;
   margin-inline: auto;
   padding-block: 2.5rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 3fr) minmax(17rem, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.title-main-column {
+  display: grid;
+  min-width: 0;
+  gap: 2rem;
+}
+
+app-title-facts {
+  scroll-margin-top: 5rem;
 }
 
 @keyframes rotate {
@@ -95,5 +109,11 @@
 @media (max-width: 560px) {
   .page-state {
     padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 56rem) {
+  .title-body-shell {
+    grid-template-columns: 1fr;
   }
 }

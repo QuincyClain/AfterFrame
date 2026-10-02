@@ -7,9 +7,19 @@
 }
 
 .catalog-hero {
-  min-height: 16rem;
-  background-image: var(--hero-overlay), url('/images/catalog-hero.png');
-  background-position: center;
+  display: grid;
+  min-height: 20rem;
+  align-items: center;
+  background-image:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--header-bg) 62%, transparent) 0%,
+      color-mix(in srgb, var(--header-bg) 30%, transparent) 42%,
+      color-mix(in srgb, var(--header-bg) 6%, transparent) 72%,
+      transparent 100%
+    ),
+    url('/images/catalog-hero.png');
+  background-position: center 52%;
   background-size: cover;
   color: #fff;
 }
@@ -22,7 +32,7 @@
 }
 
 .hero-content {
-  padding-block: 2.25rem 2rem;
+  padding-block: 2.5rem;
 }
 
 .hero-content h1 {
@@ -313,6 +323,14 @@
 @media (max-width: 37.5rem) {
   .catalog-hero {
     min-height: 18rem;
+    background-image:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--header-bg) 82%, transparent) 0%,
+        color-mix(in srgb, var(--header-bg) 54%, transparent) 65%,
+        color-mix(in srgb, var(--header-bg) 22%, transparent) 100%
+      ),
+      url('/images/catalog-hero.png');
     background-position: 62% center;
   }
 

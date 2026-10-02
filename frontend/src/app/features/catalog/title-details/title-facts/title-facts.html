@@ -1,1 +1,60 @@
-<p>title-facts works!</p>
+<aside class="facts-card" aria-labelledby="facts-heading">
+  <p class="eyebrow">At a glance</p>
+  <h2 id="facts-heading">Details</h2>
+
+  <dl>
+    <div class="fact-row">
+      <dt>Status</dt>
+      <dd class="unavailable">—</dd>
+    </div>
+
+    <div class="fact-row">
+      <dt>Media type</dt>
+      <dd>{{ title().type === 'Movie' ? 'Movie' : 'TV Series' }}</dd>
+    </div>
+
+    <div class="fact-row">
+      <dt>Release year</dt>
+      <dd>{{ title().releaseYear }}</dd>
+    </div>
+
+    <div class="fact-row">
+      <dt>Original language</dt>
+      <dd class="unavailable">—</dd>
+    </div>
+
+    @if (title().type === 'Movie') {
+      <div class="fact-row">
+        <dt>Runtime</dt>
+        <dd class="unavailable">—</dd>
+      </div>
+
+      <div class="fact-row">
+        <dt>Budget</dt>
+        <dd class="unavailable">—</dd>
+      </div>
+
+      <div class="fact-row">
+        <dt>Revenue</dt>
+        <dd class="unavailable">—</dd>
+      </div>
+    } @else {
+      <div class="fact-row">
+        <dt>Seasons</dt>
+        <dd class="unavailable">—</dd>
+      </div>
+
+      <div class="fact-row">
+        <dt>Episodes</dt>
+        <dd class="unavailable">—</dd>
+      </div>
+    }
+
+    <div class="fact-row">
+      <dt>Data source</dt>
+      <dd>{{ title().externalSource === 'tmdb' ? 'TMDB' : 'Community' }}</dd>
+    </div>
+  </dl>
+
+  <p class="facts-note">Additional information will be loaded from the extended catalog details.</p>
+</aside>

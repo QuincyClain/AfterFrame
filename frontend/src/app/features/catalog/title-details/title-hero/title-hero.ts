@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CatalogTitleDetails } from '../../data-access/catalog-api.models';
 
@@ -12,6 +12,11 @@ import { CatalogTitleDetails } from '../../data-access/catalog-api.models';
 })
 export class TitleHero {
   readonly title = input.required<CatalogTitleDetails>();
+
+  readonly addToLibrary = output<void>();
+  readonly addToFavourites = output<void>();
+  readonly rateAndReview = output<void>();
+  readonly playTrailer = output<void>();
 
   protected readonly posterUrl = computed(() => {
     const posterPath = this.title().posterPath;
