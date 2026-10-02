@@ -1,41 +1,66 @@
+import { DecimalPipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LibraryData } from '../../library/library-data';
-import { CatalogData } from '../catalog-data';
-import { Component, computed, inject, input, signal } from '@angular/core';
-import { LibraryEntryForm } from '../../library/library-entry-form/library-entry-form';
-import { LibraryEntry } from '../../library/library-entry';
+import { CatalogApi } from '../data-access/catalog-api';
+import { CatalogTitleDetails } from '../data-access/catalog-api.models';
 
 @Component({
-  imports: [LibraryEntryForm, RouterLink],
   selector: 'app-title-details-page',
-  styleUrl: './title-details-page.css',
+  imports: [DecimalPipe, RouterLink],
   templateUrl: './title-details-page.html',
+  styleUrl: './title-details-page.css',
 })
 export class TitleDetailsPage {
   readonly id = input.required<string>();
 
-  private readonly catalogData = inject(CatalogData);
-  private readonly libraryData = inject(LibraryData);
-  protected readonly isEditing = signal(false);
+  private readonly catalogApi = inject(CatalogApi);
+  private readonly reloadVersion = signal(0);
 
-  protected startEditing(): void {
-    this.isEditing.set(true);
+  protected readonly title = signal<CatalogTitleDetails | null>(null);
+  protected readonly isLoading = signal(true);
+  protected readonly isNotFound = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
+
+  protected readonly posterUrl = computed(() => {
+    const posterPath = this.title()?.posterPath;
+
+    return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : null;
+  });
+
+  constructor() {
+    effect((onCleanup) => {
+      this.reloadVersion();
+
+      const titleId = this.id();
+
+      this.title.set(null);
+      this.isLoading.set(true);
+      this.isNotFound.set(false);
+      this.errorMessage.set(null);
+
+      const subscription = this.catalogApi.getTitleById(titleId).subscribe({
+        next: (title) => {
+          this.title.set(title);
+          this.isLoading.set(false);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoading.set(false);
+
+          if (error.status === 404) {
+            this.isNotFound.set(true);
+            return;
+          }
+
+          this.errorMessage.set('We could not load this title. Please try again.');
+        },
+      });
+
+      onCleanup(() => subscription.unsubscribe());
+    });
   }
 
-  protected cancelEditing(): void {
-    this.isEditing.set(false);
-  }
-
-  protected saveEntry(entry: LibraryEntry): void {
-    this.libraryData.updateEntry(entry);
-    this.isEditing.set(false);
-  }
-
-  protected readonly title = computed(() => this.catalogData.getTitleById(Number(this.id())));
-
-  protected readonly libraryEntry = computed(() => this.libraryData.getEntry(Number(this.id())));
-
-  protected addToLibrary(): void {
-    this.libraryData.addTitle(Number(this.id()));
+  protected retry(): void {
+    this.reloadVersion.update((version) => version + 1);
   }
 }

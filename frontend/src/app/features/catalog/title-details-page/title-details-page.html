@@ -1,45 +1,74 @@
-<a routerLink="/catalog">Back to catalog</a>
+<main class="details-page">
+  <a class="back-link" routerLink="/catalog"><span aria-hidden="true">←</span> Back to catalog</a>
 
-@if (title(); as item) {
-  <article>
-    <h2>{{ item.title }}</h2>
+  @if (isLoading()) {
+    <section class="page-state" aria-live="polite">
+      <span class="loader" aria-hidden="true"></span>
+      <h1>Loading title</h1>
+      <p>Getting the latest catalog information.</p>
+    </section>
+  } @else if (isNotFound()) {
+    <section class="page-state">
+      <p class="state-label">404</p>
+      <h1>Title not found</h1>
+      <p>This title does not exist or is not available in the catalog.</p>
+      <a routerLink="/catalog">Return to catalog</a>
+    </section>
+  } @else if (errorMessage()) {
+    <section class="page-state" role="alert">
+      <p class="state-label">Something went wrong</p>
+      <h1>Unable to load title</h1>
+      <p>{{ errorMessage() }}</p>
+      <button type="button" (click)="retry()">Try again</button>
+    </section>
+  } @else if (title(); as item) {
+    <article class="title-details">
+      <div class="poster">
+        @if (posterUrl(); as url) {
+          <img [src]="url" [alt]="item.name + ' poster'" />
+        } @else {
+          <span>No poster available</span>
+        }
+      </div>
 
-    <p>
-      @if (item.type === 'movie') {
-        Movie
-      } @else {
-        TV Series
-      }
+      <div class="title-content">
+        <p class="title-meta">
+          {{ item.type === 'Movie' ? 'Movie' : 'TV Series' }} · {{ item.releaseYear }}
+        </p>
 
-      · {{ item.releaseYear }}
-    </p>
+        <h1>{{ item.name }}</h1>
 
-    <p>{{ item.description }}</p>
+        @if (item.genres.length > 0) {
+          <div class="genres" aria-label="Genres">
+            @for (genre of item.genres; track genre) {
+              <span>{{ genre }}</span>
+            }
+          </div>
+        }
 
-    @if (libraryEntry(); as entry) {
-      <p>In your library · Status: {{ entry.status }}</p>
+        @if (item.externalRating !== null) {
+          <div class="rating">
+            <span class="rating-star" aria-hidden="true">★</span>
 
-      @if (entry.rating !== null) {
-        <p>Rating: {{ entry.rating }} / 10</p>
-      }
+            <div>
+              <strong>{{ item.externalRating | number: '1.1-1' }}</strong>
+              <span>/ 10</span>
+            </div>
 
-      @if (isEditing()) {
-        <app-library-entry-form
-          [entry]="entry"
-          [titleType]="item.type"
-          (entrySaved)="saveEntry($event)"
-          (cancelled)="cancelEditing()"
-        />
-      } @else {
-        <button type="button" (click)="startEditing()">Edit library entry</button>
-      }
-    } @else {
-      <button type="button" (click)="addToLibrary()">Add to library</button>
-    }
-  </article>
-} @else {
-  <section>
-    <h2>Title not found</h2>
-    <p>We could not find a title with ID {{ id() }}.</p>
-  </section>
-}
+            <p>{{ item.externalVoteCount | number: '1.0-0' }} external votes</p>
+          </div>
+        }
+
+        <section class="overview">
+          <h2>Overview</h2>
+
+          @if (item.description) {
+            <p>{{ item.description }}</p>
+          } @else {
+            <p>No description is available for this title.</p>
+          }
+        </section>
+      </div>
+    </article>
+  }
+</main>
