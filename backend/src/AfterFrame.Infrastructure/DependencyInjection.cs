@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using AfterFrame.Application.Catalog;
+using AfterFrame.Infrastructure.Persistence.Readers;
 
 namespace AfterFrame.Infrastructure;
 
@@ -32,7 +34,9 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITitleRepository, TitleRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
         services.AddScoped<ILibraryEntryRepository, LibraryEntryRepository>();
+        services.AddScoped<ICatalogReader, EfCatalogReader>();
 
         services.AddOptions<TmdbOptions>().Bind(configuration.GetSection(TmdbOptions.SectionName))
             .Validate(options => Uri.TryCreate(options.BaseUrl, UriKind.Absolute, out _), "Tmdb:BaseUrl must be a valid absolute URL.")

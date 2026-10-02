@@ -1,11 +1,15 @@
 using AfterFrame.Application.Common.ExternalCatalog;
 using Microsoft.AspNetCore.Mvc;
+using AfterFrame.Application.Catalog.ImportExternalCatalog;
 
 namespace AfterFrame.Api.Controllers.Development;
 
 [ApiController]
 [Route("api/development/external-catalog")]
-public sealed class ExternalCatalogPreviewController(IExternalCatalogClient externalCatalog, IHostEnvironment environment) : ControllerBase
+public sealed class ExternalCatalogPreviewController(
+    IExternalCatalogClient externalCatalog,
+    ImportExternalCatalogService importExternalCatalog,
+    IHostEnvironment environment) : ControllerBase
 {
     [HttpGet("movies")]
     public async Task<ActionResult<IReadOnlyList<ExternalCatalogTitle>>> GetMovies([FromQuery] int page = 1, CancellationToken ct = default)
@@ -44,5 +48,18 @@ public sealed class ExternalCatalogPreviewController(IExternalCatalogClient exte
         var titles = await externalCatalog.GetPopularAnimeAsync(page, ct);
 
         return Ok(titles);
+    }
+
+    [HttpPost("import")]
+    public async Task<ActionResult<ImportExternalCatalogResult>> Import([FromQuery] int page = 1, CancellationToken ct = default)
+    {
+        if (!environment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        var result = await importExternalCatalog.ExecuteAsync(page, ct);
+
+        return Ok(result);
     }
 }
