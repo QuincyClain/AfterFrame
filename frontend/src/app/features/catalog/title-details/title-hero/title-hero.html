@@ -1,0 +1,68 @@
+<section class="title-hero" [style.background-image]="backdropBackground()">
+  <div class="hero-shell">
+    <a class="back-link" routerLink="/catalog">
+      <span aria-hidden="true">←</span>
+      Back to catalog
+    </a>
+
+    <div class="title-layout">
+      <div class="poster">
+        @if (posterUrl(); as url) {
+          <img [src]="url" [alt]="title().name + ' poster'" />
+        } @else {
+          <span>No poster available</span>
+        }
+      </div>
+
+      <div class="title-content">
+        <p class="title-meta">{{ title().type === 'Movie' ? 'Movie' : 'TV Series' }}</p>
+
+        <h1 class="title-heading">
+          <span class="title-name">{{ title().name }} </span>
+          @if (title().releaseYear) {
+            <span class="release-year">({{ title().releaseYear }})</span>
+          }
+        </h1>
+
+        @if (title().genres.length > 0) {
+          <div class="genres" aria-label="Genres">
+            @for (genre of title().genres; track genre) {
+              <span>{{ genre }}</span>
+            }
+          </div>
+        }
+
+        @if (title().externalRating !== null) {
+          <div class="rating">
+            <div
+              class="score-ring"
+              [style.background]="scoreBackground()"
+              [attr.aria-label]="'External rating ' + title().externalRating + ' out of 10'"
+            >
+              <span>{{ title().externalRating | number: '1.1-1' }}</span>
+            </div>
+
+            <div class="rating-copy">
+              <strong>External score</strong>
+              <span>{{ title().externalVoteCount | number: '1.0-0' }} votes</span>
+            </div>
+          </div>
+        }
+
+        <section class="overview">
+          <h2>Overview</h2>
+
+          @if (title().description) {
+            <p>{{ title().description }}</p>
+          } @else {
+            <p>No description is available for this title.</p>
+          }
+        </section>
+
+        @if (title().externalSource === 'tmdb') {
+          <p class="source-note">Catalog information provided by TMDB.</p>
+        }
+      </div>
+    </div>
+  </div>
+</section>

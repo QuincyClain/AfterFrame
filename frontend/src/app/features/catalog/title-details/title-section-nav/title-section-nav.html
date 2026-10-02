@@ -1,0 +1,14 @@
+<nav class="section-nav" aria-label="Title sections">
+  <div class="section-nav-shell">
+    @for (section of sections(); track section.id) {
+      <a
+        [routerLink]="[]"
+        [fragment]="section.id"
+        [class.active]="activeSection() === section.id"
+        [attr.aria-current]="activeSection() === section.id ? 'location' : null"
+      >
+        {{ section.label }}
+      </a>
+    }
+  </div>
+</nav>

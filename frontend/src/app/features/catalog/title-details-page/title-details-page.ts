@@ -1,13 +1,14 @@
-import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CatalogApi } from '../data-access/catalog-api';
 import { CatalogTitleDetails } from '../data-access/catalog-api.models';
+import { TitleHero } from '../title-details/title-hero/title-hero';
+import { TitleSectionNav } from '../title-details/title-section-nav/title-section-nav';
 
 @Component({
   selector: 'app-title-details-page',
-  imports: [DecimalPipe, RouterLink],
+  imports: [RouterLink, TitleHero, TitleSectionNav],
   templateUrl: './title-details-page.html',
   styleUrl: './title-details-page.css',
 })
@@ -21,25 +22,6 @@ export class TitleDetailsPage {
   protected readonly isLoading = signal(true);
   protected readonly isNotFound = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-
-  protected readonly posterUrl = computed(() => {
-    const posterPath = this.title()?.posterPath;
-
-    return posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : null;
-  });
-
-  protected readonly backdropBackground = computed(() => {
-    const backdropPath = this.title()?.backdropPath;
-
-    return backdropPath ? `url("https://image.tmdb.org/t/p/w1280${backdropPath}")` : null;
-  });
-
-  protected readonly scoreBackground = computed(() => {
-    const rating = this.title()?.externalRating ?? 0;
-    const percentage = Math.round(rating * 10);
-
-    return `conic-gradient(var(--rating) ${percentage}%, rgb(255 255 255 / 18%) 0)`;
-  });
 
   constructor() {
     effect((onCleanup) => {
