@@ -14,6 +14,8 @@ public sealed class AfterFrameDbContext(
 
     public DbSet<Title> Titles => Set<Title>();
 
+    public DbSet<Genre> Genres => Set<Genre>();
+
     public DbSet<LibraryEntry> LibraryEntries => Set<LibraryEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

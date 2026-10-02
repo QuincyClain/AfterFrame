@@ -4,32 +4,62 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AfterFrame.Infrastructure.Persistence.Configurations;
 
-internal sealed class TitleConfiguration : IEntityTypeConfiguration<Title>
+internal sealed class TitleConfiguration
+    : IEntityTypeConfiguration<Title>
 {
     public void Configure(EntityTypeBuilder<Title> builder)
     {
         builder.ToTable("titles", table =>
-            {
-                table.HasCheckConstraint("ck_titles_release_year", "\"release_year\" > 0");
+        {
+            table.HasCheckConstraint("ck_titles_release_year", "\"release_year\" > 0");
 
-                table.HasCheckConstraint("ck_titles_origin",
-                    """
+            table.HasCheckConstraint(
+                "ck_titles_origin",
+                """
+                (
+                    "origin" = 'External'
+                    AND "publication_status" = 'Published'
+                    AND "external_source" IS NOT NULL
+                    AND "external_id" IS NOT NULL
+                    AND "created_by_user_id" IS NULL
+                )
+                OR
+                (
+                    "origin" = 'UserCreated'
+                    AND "external_source" IS NULL
+                    AND "external_id" IS NULL
+                    AND "created_by_user_id" IS NOT NULL
+                )
+                """);
+
+            table.HasCheckConstraint(
+                "ck_titles_external_rating",
+                """
+                (
+                    "origin" = 'External'
+                    AND
                     (
-                        "origin" = 'External'
-                        AND "publication_status" = 'Published'
-                        AND "external_source" IS NOT NULL
-                        AND "external_id" IS NOT NULL
-                        AND "created_by_user_id" IS NULL
+                        (
+                            "external_rating" IS NULL
+                            AND "external_vote_count" = 0
+                        )
+                        OR
+                        (
+                            "external_rating" IS NOT NULL
+                            AND "external_rating" >= 0
+                            AND "external_rating" <= 10
+                            AND "external_vote_count" > 0
+                        )
                     )
-                    OR
-                    (
-                        "origin" = 'UserCreated'
-                        AND "external_source" IS NULL
-                        AND "external_id" IS NULL
-                        AND "created_by_user_id" IS NOT NULL
-                    )
-                    """);
-            });
+                )
+                OR
+                (
+                    "origin" = 'UserCreated'
+                    AND "external_rating" IS NULL
+                    AND "external_vote_count" = 0
+                )
+                """);
+        });
 
         builder.HasKey(title => title.Id);
 
@@ -60,6 +90,18 @@ internal sealed class TitleConfiguration : IEntityTypeConfiguration<Title>
         builder.Property(title => title.Description)
             .HasColumnName("description")
             .HasMaxLength(4000)
+            .IsRequired();
+
+        builder.Property(title => title.PosterPath)
+            .HasColumnName("poster_path")
+            .HasMaxLength(500);
+
+        builder.Property(title => title.ExternalRating)
+            .HasColumnName("external_rating")
+            .HasPrecision(5, 3);
+
+        builder.Property(title => title.ExternalVoteCount)
+            .HasColumnName("external_vote_count")
             .IsRequired();
 
         builder.Property(title => title.Origin)
@@ -97,6 +139,31 @@ internal sealed class TitleConfiguration : IEntityTypeConfiguration<Title>
             .WithMany()
             .HasForeignKey(title => title.CreatedByUserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Navigation(title => title.Genres)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(title => title.Genres)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>("TitleGenre", right => right
+                    .HasOne<Genre>()
+                    .WithMany()
+                    .HasForeignKey("genre_id")
+                    .OnDelete(DeleteBehavior.Cascade),
+                left => left
+                    .HasOne<Title>()
+                    .WithMany()
+                    .HasForeignKey("title_id")
+                    .OnDelete(DeleteBehavior.Cascade),
+                join =>
+                {
+                    join.ToTable("title_genres");
+
+                    join.HasKey("title_id", "genre_id");
+
+                    join.HasIndex("genre_id")
+                        .HasDatabaseName("ix_title_genres_genre_id");
+                });
 
         builder.HasIndex(title => new { title.ExternalSource, title.ExternalId })
             .IsUnique()
