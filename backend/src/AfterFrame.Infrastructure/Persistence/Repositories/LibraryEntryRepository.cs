@@ -16,4 +16,10 @@ internal sealed class LibraryEntryRepository(AfterFrameDbContext dbContext) : IL
     {
         dbContext.LibraryEntries.Add(entry);
     }
+    
+    public Task<LibraryEntry?> GetAsync(Guid userId, Guid titleId, CancellationToken cancellationToken = default)
+    {
+        return dbContext.LibraryEntries.SingleOrDefaultAsync(entry => entry.UserId == userId && entry.TitleId == titleId,
+            cancellationToken);
+    }
 }
