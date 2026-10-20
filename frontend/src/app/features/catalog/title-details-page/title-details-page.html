@@ -32,6 +32,7 @@
         [title]="item"
         [trailerAvailable]="trailer() !== null"
         (playTrailer)="openTrailer()"
+        (rateAndReview)="openReviewDialog()"
       />
 
       <app-title-section-nav [showEpisodes]="item.type === 'Series'" />
@@ -57,6 +58,13 @@
               [loadFailed]="mediaLoadFailed()"
               (playTrailer)="openTrailer()"
               (openImage)="openMediaImage($event)"
+            />
+
+            <app-title-reviews-section
+              id="reviews"
+              [reviews]="reviews()"
+              [isLoading]="isReviewsLoading()"
+              [loadFailed]="reviewsLoadFailed()"
             />
 
             <app-title-recommendations-section
@@ -88,5 +96,20 @@
       [titleName]="title()?.name ?? 'Media image'"
       (closed)="closeMediaImage()"
     />
+  }
+
+  @if (isReviewDialogOpen()) {
+    @if (title(); as currentTitle) {
+      <app-title-review-dialog
+        [titleName]="currentTitle.name"
+        [existingReview]="currentUserReview()"
+        [saving]="isReviewSaving()"
+        [deleting]="isReviewDeleting()"
+        [errorMessage]="reviewActionError()"
+        (saveRequested)="saveReview($event)"
+        (deleteRequested)="deleteReview()"
+        (closed)="closeReviewDialog()"
+      />
+    }
   }
 </main>

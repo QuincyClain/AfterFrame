@@ -1,1 +1,245 @@
-<p>title-reviews-section works!</p>
+<section class="reviews-section" aria-labelledby="reviews-heading">
+  <header class="section-header">
+    <div class="section-title">
+      <span class="section-icon" aria-hidden="true">✎</span>
+
+      <div>
+        <h2 id="reviews-heading">Reviews</h2>
+        <p>Ratings, reactions, and thoughts from the community</p>
+      </div>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <div class="reviews-skeleton" aria-label="Loading reviews">
+      <div class="summary-skeleton"></div>
+
+      <div class="card-skeleton">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  } @else if (loadFailed()) {
+    <div class="reviews-state" role="alert">
+      <span aria-hidden="true">!</span>
+      <h3>Reviews are unavailable</h3>
+      <p>We could not load the reviews for this title.</p>
+    </div>
+  } @else if (reviews(); as summary) {
+    <div class="reviews-overview">
+      <div class="average-score">
+        <span class="score-label">Community score</span>
+
+        @if (summary.averageRating !== null) {
+          <strong>{{ summary.averageRating.toFixed(1) }} / 10</strong>
+
+          <div class="score-caption">
+            <span class="score-star" aria-hidden="true">★</span>
+
+            <span>
+              Based on
+              {{ summary.ratingCount }}
+              {{ summary.ratingCount === 1 ? 'rating' : 'ratings' }}
+            </span>
+          </div>
+        } @else {
+          <strong>—</strong>
+          <div class="score-caption">No ratings yet</div>
+        }
+      </div>
+
+      <div class="audience-signal">
+        <div class="signal-heading">
+          <div>
+            <span class="signal-label">Audience rating</span>
+
+            @if (summary.averageRating !== null) {
+              <strong>
+                {{ (summary.averageRating * 10).toFixed(0) }}%
+              </strong>
+            } @else {
+              <strong>—</strong>
+            }
+          </div>
+
+          <span class="signal-icon" aria-hidden="true">✦</span>
+        </div>
+
+        <div
+          class="score-track"
+          role="progressbar"
+          aria-label="Community rating"
+          aria-valuemin="0"
+          aria-valuemax="10"
+          [attr.aria-valuenow]="summary.averageRating"
+        >
+          <span
+            [style.width.%]="
+              summary.averageRating !== null
+                ? summary.averageRating * 10
+                : 0
+            "
+          ></span>
+        </div>
+
+        <div class="score-scale" aria-hidden="true">
+          <span>0</span>
+          <span>5</span>
+          <span>10</span>
+        </div>
+
+        @if (summary.averageRating !== null) {
+          <p>
+            @if (summary.averageRating >= 8) {
+              Highly rated by the community.
+            } @else if (summary.averageRating >= 6) {
+              Generally well received by viewers.
+            } @else {
+              Community opinion is mixed.
+            }
+          </p>
+        } @else {
+          <p>The audience score will appear after the first rating.</p>
+        }
+      </div>
+
+      <div class="review-statistics">
+        <div class="statistic">
+          <span class="statistic-icon" aria-hidden="true">★</span>
+
+          <div>
+            <strong>{{ summary.ratingCount }}</strong>
+            <span>
+              {{ summary.ratingCount === 1 ? 'rating' : 'ratings' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="statistic">
+          <span class="statistic-icon" aria-hidden="true">✎</span>
+
+          <div>
+            <strong>{{ summary.reviewCount }}</strong>
+            <span>
+              {{
+                summary.reviewCount === 1
+                  ? 'written review'
+                  : 'written reviews'
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (reviewItems().length > 0) {
+      <div class="reviews-list">
+        @for (review of visibleReviewItems(); track review.userId) {
+          <article
+            class="review-card"
+            [class.current-user-review]="review.isCurrentUser"
+          >
+            <header class="review-header">
+              <div class="review-author">
+                <span class="review-avatar" aria-hidden="true">
+                  {{ getInitials(review.userDisplayName) }}
+                </span>
+
+                <div class="author-details">
+                  <div class="author-name">
+                    <h3>{{ review.userDisplayName }}</h3>
+
+                    @if (review.isCurrentUser) {
+                      <span class="your-review-label">Your review</span>
+                    }
+                  </div>
+
+                  <time [attr.datetime]="review.reviewedAtUtc">
+                    Reviewed on
+                    {{ review.reviewedAtUtc | date: 'MMMM d, y' }}
+                  </time>
+                </div>
+              </div>
+
+              <div class="review-meta">
+                @if (review.vibe) {
+                  <span
+                    class="vibe-chip"
+                    [attr.title]="getVibeLabel(review.vibe)"
+                  >
+                    <span class="vibe-emoji" aria-hidden="true">
+                      {{ getVibeEmoji(review.vibe) }}
+                    </span>
+
+                    {{ getVibeLabel(review.vibe) }}
+                  </span>
+                }
+
+                <span class="review-rating">
+                  <span aria-hidden="true">★</span>
+                  {{ review.rating.toFixed(1) }}
+                </span>
+              </div>
+            </header>
+
+            @if (
+              review.containsSpoilers &&
+              !isSpoilerRevealed(review)
+              ) {
+              <button
+                type="button"
+                class="spoiler-cover"
+                (click)="revealSpoiler(review.userId)"
+              >
+                <span class="spoiler-icon" aria-hidden="true">◉</span>
+
+                <span>
+                  <strong>This review contains spoilers</strong>
+                  <small>Click to reveal the review</small>
+                </span>
+              </button>
+            } @else {
+              <blockquote class="review-quote">
+                <p>{{ review.review }}</p>
+              </blockquote>
+            }
+          </article>
+        }
+      </div>
+      @if (reviewItems().length > 3) {
+        <div class="review-list-actions">
+          @if (hasExpandedReviews()) {
+            <button
+              type="button"
+              class="show-reviews-button secondary"
+              (click)="showFewerReviews()"
+            >
+              <span aria-hidden="true">↑</span>
+              Show fewer
+            </button>
+          }
+
+          @if (hasMoreReviews()) {
+            <button
+              type="button"
+              class="show-reviews-button"
+              (click)="showMoreReviews()"
+            >
+              Show {{ nextReviewBatchSize() }} more
+              {{ nextReviewBatchSize() === 1 ? 'review' : 'reviews' }}
+
+              <span aria-hidden="true">↓</span>
+            </button>
+          }
+        </div>
+      }
+    } @else {
+      <div class="reviews-state empty-state">
+        <span aria-hidden="true">✦</span>
+        <h3>No written reviews yet</h3>
+        <p>Be the first person to share what you thought.</p>
+      </div>
+    }
+  }
+</section>

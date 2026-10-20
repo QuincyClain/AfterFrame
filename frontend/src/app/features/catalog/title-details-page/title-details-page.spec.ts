@@ -10,6 +10,7 @@ import {
   CatalogTitleSummary,
 } from '../data-access/catalog-api.models';
 import { TitleDetailsPage } from './title-details-page';
+import { ReviewsApi } from '../../reviews/data-access/reviews-api';
 
 describe('TitleDetailsPage', () => {
   let fixture: ComponentFixture<TitleDetailsPage>;
@@ -62,6 +63,26 @@ describe('TitleDetailsPage', () => {
     },
   ];
 
+  const getTitleReviews = vi.fn(() =>
+    of({
+      averageRating: 8.5,
+      ratingCount: 1,
+      reviewCount: 1,
+      items: [
+        {
+          userId: '0199f3f4-7c00-7000-8000-000000000001',
+          userDisplayName: 'Demo User',
+          rating: 8.5,
+          vibe: 'Loved' as const,
+          review: 'A clever and atmospheric series.',
+          containsSpoilers: false,
+          reviewedAtUtc: '2026-10-20T13:17:49.802801+00:00',
+          isCurrentUser: true,
+        },
+      ],
+    }),
+  );
+
   const getTitleRecommendations = vi.fn(() => of(recommendations));
 
   const getTitleMedia = vi.fn(() => of(media));
@@ -87,6 +108,28 @@ describe('TitleDetailsPage', () => {
     getTitleRecommendations.mockReset();
     getTitleRecommendations.mockReturnValue(of(recommendations));
 
+    getTitleReviews.mockReset();
+
+    getTitleReviews.mockReturnValue(
+      of({
+        averageRating: 8.5,
+        ratingCount: 1,
+        reviewCount: 1,
+        items: [
+          {
+            userId: '0199f3f4-7c00-7000-8000-000000000001',
+            userDisplayName: 'Demo User',
+            rating: 8.5,
+            vibe: 'Loved' as const,
+            review: 'A clever and atmospheric series.',
+            containsSpoilers: false,
+            reviewedAtUtc: '2026-10-20T13:17:49.802801+00:00',
+            isCurrentUser: true,
+          },
+        ],
+      }),
+    );
+
     await TestBed.configureTestingModule({
       imports: [TitleDetailsPage],
       providers: [
@@ -98,6 +141,12 @@ describe('TitleDetailsPage', () => {
             getTitleCast,
             getTitleMedia,
             getTitleRecommendations,
+          },
+        },
+        {
+          provide: ReviewsApi,
+          useValue: {
+            getTitleReviews,
           },
         },
       ],
@@ -154,9 +203,13 @@ describe('TitleDetailsPage', () => {
     expect(element.textContent).toContain('Trailer & Media');
     expect(element.textContent).toContain('Official Trailer');
     expect(getTitleRecommendations).toHaveBeenCalledWith(titleId);
-    expect(getTitleRecommendations).toHaveBeenCalledWith(titleId);
     expect(element.textContent).toContain('You might also like');
     expect(element.textContent).toContain('Princess Mononoke');
+    expect(getTitleReviews).toHaveBeenCalledWith(titleId);
+    expect(element.textContent).toContain('Reviews');
+    expect(element.textContent).toContain('8.5 / 10');
+    expect(element.textContent).toContain('1 rating');
+    expect(element.textContent).toContain('1 written review');
   });
 
   it('should render a not-found state for an unavailable title', async () => {

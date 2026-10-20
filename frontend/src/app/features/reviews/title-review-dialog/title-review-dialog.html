@@ -1,0 +1,265 @@
+<div class="review-dialog-overlay" (click)="close()">
+  <section
+    class="review-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="review-dialog-title"
+    [attr.data-vibe]="selectedVibe()"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="dialog-header">
+      <div class="dialog-intro">
+        <div class="dialog-eyebrow">
+          <span class="brand-mark">AF</span>
+          <span>AfterFrame impression</span>
+        </div>
+
+        <p class="dialog-mode">
+          {{ existingReview() ? 'Edit your review' : 'Share your reaction' }}
+        </p>
+
+        <h2 id="review-dialog-title">{{ titleName() }}</h2>
+
+        <p class="dialog-description">
+          Capture what this story felt like while the frame is still fresh.
+        </p>
+      </div>
+
+      <div class="live-impression">
+        <span class="live-label">Your impression</span>
+
+        <div class="live-value">
+          <span class="live-vibe" aria-hidden="true">
+            @if (selectedVibeDetails(); as vibe) {
+              {{ vibe.emoji }}
+            } @else {
+              ✦
+            }
+          </span>
+
+          <div class="live-score">
+            <strong>
+              @if (selectedRating() !== null) {
+                {{ selectedRating()?.toFixed(1) }}
+              } @else {
+                —
+              }
+            </strong>
+            <span>/ 10</span>
+          </div>
+        </div>
+
+        <small>{{ ratingMessage() }}</small>
+      </div>
+
+      <button
+        class="close-button"
+        type="button"
+        aria-label="Close review dialog"
+        (click)="close()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="dialog-content">
+        <section class="form-section rating-section">
+          <div class="form-section-heading">
+            <span class="step-number">1</span>
+
+            <div>
+              <h3>Your rating</h3>
+              <p>Choose a score from 0.5 to 10.</p>
+            </div>
+          </div>
+
+          <div class="rating-experience">
+            <div class="rating-row">
+              <app-star-rating-input
+                [rating]="form.controls.rating.value"
+                [disabled]="saving() || deleting()"
+                (ratingChange)="setRating($event)"
+              />
+
+              <div class="rating-copy">
+                <strong>
+                  @if (selectedRating() !== null) {
+                    {{ selectedRating()?.toFixed(1) }}
+                  } @else {
+                    —
+                  }
+                </strong>
+
+                <span>{{ ratingMessage() }}</span>
+              </div>
+            </div>
+
+            <div
+              class="rating-meter"
+              role="progressbar"
+              aria-label="Selected rating"
+              aria-valuemin="0"
+              aria-valuemax="10"
+              [attr.aria-valuenow]="selectedRating()"
+            >
+              <span
+                class="rating-meter-fill"
+                [style.width.%]="ratingPercentage()"
+              ></span>
+
+              @if (selectedRating() !== null) {
+                <span
+                  class="rating-meter-marker"
+                  [style.left.%]="ratingPercentage()"
+                ></span>
+              }
+            </div>
+
+            <div class="rating-scale" aria-hidden="true">
+              <span>Not for me</span>
+              <span>Worth a look</span>
+              <span>Unforgettable</span>
+            </div>
+          </div>
+
+          @if (
+            form.controls.rating.touched &&
+            form.controls.rating.invalid
+            ) {
+            <p class="field-error">Select a rating to continue.</p>
+          }
+        </section>
+
+        <section class="form-section">
+          <div class="form-section-heading">
+            <span class="step-number">2</span>
+
+            <div>
+              <h3>Choose a vibe</h3>
+              <p>What feeling stayed with you after watching?</p>
+            </div>
+          </div>
+
+          <div class="vibe-grid" role="group" aria-label="Review vibe">
+            @for (vibe of vibes; track vibe.value) {
+              <button
+                type="button"
+                class="vibe-option"
+                [class.selected]="
+                  form.controls.vibe.value === vibe.value
+                "
+                [attr.aria-pressed]="
+                  form.controls.vibe.value === vibe.value
+                "
+                [disabled]="saving() || deleting()"
+                (click)="selectVibe(vibe.value)"
+              >
+                <span class="vibe-emoji" aria-hidden="true">
+                  {{ vibe.emoji }}
+                </span>
+
+                <strong>{{ vibe.label }}</strong>
+
+                @if (form.controls.vibe.value === vibe.value) {
+                  <span class="selected-mark" aria-hidden="true">✓</span>
+                }
+              </button>
+            }
+          </div>
+
+          @if (
+            form.controls.vibe.touched &&
+            form.controls.vibe.invalid
+            ) {
+            <p class="field-error">Choose one vibe to continue.</p>
+          }
+        </section>
+
+        <section class="form-section">
+          <div class="form-section-heading">
+            <span class="step-number">3</span>
+
+            <div>
+              <h3>Write your review</h3>
+              <p>Turn your impression into a few memorable lines.</p>
+            </div>
+          </div>
+
+          <div class="review-field">
+            <span class="quote-mark" aria-hidden="true">“</span>
+
+            <textarea
+              formControlName="review"
+              rows="6"
+              maxlength="2000"
+              placeholder="What stayed with you after the final frame?"
+              [attr.disabled]="saving() || deleting() ? true : null"
+            ></textarea>
+
+            <span class="character-count">
+              {{ form.controls.review.value.length }} / 2000
+            </span>
+          </div>
+
+          <label class="spoiler-option">
+            <input
+              type="checkbox"
+              formControlName="containsSpoilers"
+            />
+
+            <span class="custom-checkbox" aria-hidden="true">✓</span>
+
+            <span>
+              <strong>This review contains spoilers</strong>
+              <small>
+                The text will stay hidden until another user reveals it.
+              </small>
+            </span>
+          </label>
+        </section>
+
+        @if (errorMessage()) {
+          <p class="action-error" role="alert">
+            {{ errorMessage() }}
+          </p>
+        }
+      </div>
+
+      <footer class="dialog-footer">
+        <div>
+          @if (existingReview()) {
+            <button
+              class="delete-button"
+              type="button"
+              [disabled]="saving() || deleting()"
+              (click)="requestDelete()"
+            >
+              {{ deleting() ? 'Removing...' : 'Remove review' }}
+            </button>
+          }
+        </div>
+
+        <div class="primary-actions">
+          <button
+            class="cancel-button"
+            type="button"
+            [disabled]="saving() || deleting()"
+            (click)="close()"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="save-button"
+            type="submit"
+            [disabled]="form.invalid || saving() || deleting()"
+          >
+            <span aria-hidden="true">✓</span>
+            {{ saving() ? 'Saving...' : 'Save impression' }}
+          </button>
+        </div>
+      </footer>
+    </form>
+  </section>
+</div>
