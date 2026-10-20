@@ -8,7 +8,7 @@ internal sealed class LibraryEntryRepository(AfterFrameDbContext dbContext) : IL
 {
     public Task<bool> ExistsAsync(Guid userId, Guid titleId, CancellationToken cancellationToken = default)
     {
-        return dbContext.LibraryEntries.AnyAsync(entry => 
+        return dbContext.LibraryEntries.AnyAsync(entry =>
                 entry.UserId == userId && entry.TitleId == titleId, cancellationToken);
     }
 

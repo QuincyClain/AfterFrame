@@ -1,1 +1,65 @@
-<p>title-cast-section works!</p>
+<section class="cast-section" aria-labelledby="cast-heading">
+  <header class="section-header">
+    <div class="section-title">
+      <span class="section-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      </span>
+      <h2 id="cast-heading">Top Billed Cast</h2>
+    </div>
+
+    @if (!isLoading() && cast().length > 6) {
+      <button class="view-cast-button" type="button" (click)="viewFullCast.emit()">
+        <span>View full cast</span>
+
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
+    }
+  </header>
+
+  <div class="cast-list">
+    @if (isLoading()) {
+      @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+        <article class="cast-card cast-placeholder" aria-hidden="true">
+          <div class="cast-photo"></div>
+
+          <div class="cast-copy">
+            <span class="placeholder-line placeholder-name"></span>
+            <span class="placeholder-line placeholder-role"></span>
+          </div>
+        </article>
+      }
+    } @else if (visibleCast().length > 0) {
+      @for (member of visibleCast(); track member.id) {
+        <article class="cast-card">
+          <div class="cast-photo">
+            @if (profileUrl(member.profilePath); as url) {
+              <img [src]="url" [alt]="member.name" />
+            } @else {
+              <span aria-hidden="true">{{ member.name.charAt(0) }}</span>
+            }
+          </div>
+
+          <div class="cast-copy">
+            <h3>{{ member.name }}</h3>
+            <p>{{ member.character || 'Cast member' }}</p>
+          </div>
+        </article>
+      }
+    } @else {
+      <p class="cast-empty" role="status">
+        {{
+          loadFailed()
+            ? 'Cast information could not be loaded.'
+            : 'No cast information is available for this title.'
+        }}
+      </p>
+    }
+  </div>
+</section>

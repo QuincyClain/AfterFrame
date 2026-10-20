@@ -7,4 +7,6 @@ public interface IExternalCatalogClient
     Task<IReadOnlyList<ExternalCatalogTitle>> GetPopularSeriesAsync(int page, CancellationToken ct = default);
 
     Task<IReadOnlyList<ExternalCatalogTitle>> GetPopularAnimeAsync(int page, CancellationToken ct = default);
+
+    Task<IReadOnlyList<ExternalCatalogCastMember>> GetCastAsync(string externalId, CancellationToken ct = default);
 }

@@ -35,6 +35,11 @@
         <div class="title-body-shell">
           <div class="title-main-column">
             <app-title-activity-card [titleType]="item.type" />
+            <app-title-cast-section
+              [cast]="cast()"
+              [isLoading]="isCastLoading()"
+              [loadFailed]="castLoadFailed()"
+            />
           </div>
 
           <app-title-facts id="details" [title]="item" />

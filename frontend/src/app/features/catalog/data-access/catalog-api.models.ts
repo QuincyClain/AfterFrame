@@ -44,3 +44,10 @@ export interface PagedResult<T> {
   readonly totalCount: number;
   readonly totalPages: number;
 }
+
+export interface CatalogCastMember {
+  readonly id: string;
+  readonly name: string;
+  readonly character: string | null;
+  readonly profilePath: string | null;
+}

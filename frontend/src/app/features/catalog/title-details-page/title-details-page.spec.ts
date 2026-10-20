@@ -30,6 +30,17 @@ describe('TitleDetailsPage', () => {
     genres: ['Adventure', 'Animation', 'Family'],
   };
 
+  const getTitleCast = vi.fn(() =>
+    of([
+      {
+        id: '85',
+        name: 'Hayao Miyazaki',
+        character: 'Additional Voices',
+        profilePath: null,
+      },
+    ]),
+  );
+
   const getTitleById = vi.fn(() => of(title));
 
   beforeEach(async () => {
@@ -44,10 +55,23 @@ describe('TitleDetailsPage', () => {
           provide: CatalogApi,
           useValue: {
             getTitleById,
+            getTitleCast,
           },
         },
       ],
     }).compileComponents();
+
+    getTitleCast.mockReset();
+    getTitleCast.mockReturnValue(
+      of([
+        {
+          id: '85',
+          name: 'Hayao Miyazaki',
+          character: 'Additional Voices',
+          profilePath: null,
+        },
+      ]),
+    );
 
     fixture = TestBed.createComponent(TitleDetailsPage);
     fixture.componentRef.setInput('id', titleId);
@@ -70,6 +94,8 @@ describe('TitleDetailsPage', () => {
     expect(element.querySelector<HTMLElement>('.title-hero')?.style.backgroundImage).toContain(
       title.backdropPath,
     );
+    expect(getTitleCast).toHaveBeenCalledWith(titleId);
+    expect(element.textContent).toContain('Hayao Miyazaki');
   });
 
   it('should render a not-found state for an unavailable title', async () => {

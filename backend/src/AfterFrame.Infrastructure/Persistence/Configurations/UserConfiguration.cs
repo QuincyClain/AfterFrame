@@ -25,7 +25,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(user => user.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired();
-        
+
         builder.HasData(new
         {
             Id = DevelopmentUserDefaults.Id,

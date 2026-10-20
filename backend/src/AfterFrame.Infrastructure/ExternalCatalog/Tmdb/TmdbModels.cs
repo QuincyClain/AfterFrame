@@ -94,3 +94,51 @@ internal sealed class TmdbSeries
     [JsonPropertyName("origin_country")]
     public List<string> OriginCountry { get; init; } = [];
 }
+
+internal sealed class TmdbCreditsResponse<TCastMember>
+{
+    [JsonPropertyName("cast")]
+    public List<TCastMember> Cast { get; init; } = [];
+}
+
+internal sealed class TmdbMovieCastMember
+{
+    [JsonPropertyName("id")]
+    public int Id { get; init; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("character")]
+    public string? Character { get; init; }
+
+    [JsonPropertyName("profile_path")]
+    public string? ProfilePath { get; init; }
+
+    [JsonPropertyName("order")]
+    public int Order { get; init; }
+}
+
+internal sealed class TmdbSeriesCastMember
+{
+    [JsonPropertyName("id")]
+    public int Id { get; init; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("profile_path")]
+    public string? ProfilePath { get; init; }
+
+    [JsonPropertyName("order")]
+    public int Order { get; init; }
+
+    [JsonPropertyName("roles")]
+    public List<TmdbSeriesCastRole> Roles { get; init; } = [];
+}
+
+internal sealed class TmdbSeriesCastRole
+{
+    [JsonPropertyName("character")]
+    public string Character { get; init; } = string.Empty;
+}

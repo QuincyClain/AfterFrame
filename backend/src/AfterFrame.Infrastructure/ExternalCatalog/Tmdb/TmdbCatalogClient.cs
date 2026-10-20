@@ -74,6 +74,76 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
         return animeMovies.Concat(animeSeries).ToArray();
     }
 
+    public async Task<IReadOnlyList<ExternalCatalogCastMember>> GetCastAsync(string externalId, CancellationToken ct = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(externalId);
+
+        var parts = externalId.Split(':', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length != 2 || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out var tmdbId) || tmdbId <= 0)
+        {
+            throw new ArgumentException($"Unsupported TMDB identifier '{externalId}'.", nameof(externalId));
+        }
+
+        return parts[0] switch
+        {
+            "movie" => await GetMovieCastAsync(tmdbId, ct),
+            "tv" => await GetSeriesCastAsync(tmdbId, ct),
+            _ => throw new ArgumentException(
+                $"Unsupported TMDB media type '{parts[0]}'.", nameof(externalId))
+        };
+    }
+
+    private async Task<IReadOnlyList<ExternalCatalogCastMember>> GetMovieCastAsync(int tmdbId, CancellationToken ct)
+    {
+        var response = await GetAsync<TmdbCreditsResponse<TmdbMovieCastMember>>(
+            $"movie/{tmdbId}/credits?language={Language}", ct);
+
+        return response.Cast
+            .Where(member => !string.IsNullOrWhiteSpace(member.Name))
+            .OrderBy(member => member.Order)
+            .Take(20)
+            .Select(member => new ExternalCatalogCastMember(
+                member.Id.ToString(CultureInfo.InvariantCulture),
+                member.Name.Trim(),
+                NormalizeOptionalText(member.Character),
+                NormalizeOptionalText(member.ProfilePath),
+                member.Order))
+            .ToArray();
+    }
+
+    private async Task<IReadOnlyList<ExternalCatalogCastMember>> GetSeriesCastAsync(int tmdbId, CancellationToken ct)
+    {
+        var response = await GetAsync<TmdbCreditsResponse<TmdbSeriesCastMember>>(
+            $"tv/{tmdbId}/aggregate_credits?language={Language}", ct);
+
+        return response.Cast
+            .Where(member => !string.IsNullOrWhiteSpace(member.Name))
+            .OrderBy(member => member.Order)
+            .Take(20)
+            .Select(member => new ExternalCatalogCastMember(
+                member.Id.ToString(CultureInfo.InvariantCulture),
+                member.Name.Trim(),
+                GetSeriesCharacters(member.Roles),
+                NormalizeOptionalText(member.ProfilePath),
+                member.Order))
+            .ToArray();
+    }
+
+    private static string? GetSeriesCharacters(IEnumerable<TmdbSeriesCastRole> roles)
+    {
+        var characters = roles
+            .Select(role => role.Character.Trim())
+            .Where(character => character.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(2)
+            .ToArray();
+
+        return characters.Length > 0
+            ? string.Join(" / ", characters)
+            : null;
+    }
+
     private async Task<IReadOnlyDictionary<int, ExternalCatalogGenre>> GetGenresAsync(
         string path,
         CancellationToken ct)
@@ -85,6 +155,11 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
         return response.Genres.ToDictionary(genre => genre.Id, genre => new ExternalCatalogGenre(
                 genre.Id.ToString(CultureInfo.InvariantCulture),
                 genre.Name));
+    }
+
+    private static string? NormalizeOptionalText(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
     private async Task<T> GetAsync<T>(string path, CancellationToken ct)

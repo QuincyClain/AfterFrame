@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  CatalogCastMember,
   CatalogQuery,
   CatalogTitleDetails,
   CatalogTitleSummary,
@@ -29,5 +30,9 @@ export class CatalogApi {
 
   getTitleById(titleId: string): Observable<CatalogTitleDetails> {
     return this.http.get<CatalogTitleDetails>(`${this.baseUrl}/${titleId}`);
+  }
+
+  getTitleCast(titleId: string): Observable<readonly CatalogCastMember[]> {
+    return this.http.get<readonly CatalogCastMember[]>(`${this.baseUrl}/${titleId}/cast`);
   }
 }

@@ -8,4 +8,6 @@ public interface ICatalogReader
     Task<PagedResult<CatalogTitleSummary>> GetPageAsync(Guid currentUserId, CatalogQuery query, CancellationToken ct = default);
 
     Task<CatalogTitleDetails?> GetByIdAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default);
+
+    Task<CatalogTitleExternalReference?> GetExternalReferenceAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default);
 }

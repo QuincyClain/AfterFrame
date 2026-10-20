@@ -7,8 +7,7 @@ export const CATALOG_MOCK: readonly Title[] = [
     type: 'movie',
     tags: [],
     releaseYear: 2014,
-    description:
-      'A team of explorers travels through space in search of a new home for humanity.',
+    description: 'A team of explorers travels through space in search of a new home for humanity.',
   },
   {
     id: 2,
@@ -16,8 +15,7 @@ export const CATALOG_MOCK: readonly Title[] = [
     type: 'movie',
     tags: [],
     releaseYear: 2010,
-    description:
-      'A skilled team attempts to plant an idea in a person’s mind through dreams.',
+    description: 'A skilled team attempts to plant an idea in a person’s mind through dreams.',
   },
   {
     id: 3,

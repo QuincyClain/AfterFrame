@@ -100,6 +100,14 @@ internal sealed class EfCatalogReader(AfterFrameDbContext dbContext) : ICatalogR
             .SingleOrDefaultAsync(ct);
     }
 
+    public Task<CatalogTitleExternalReference?> GetExternalReferenceAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default)
+    {
+        return GetVisibleTitles(currentUserId)
+            .Where(title => title.Id == titleId)
+            .Select(title => new CatalogTitleExternalReference(title.ExternalSource, title.ExternalId))
+            .SingleOrDefaultAsync(ct);
+    }
+
     private IQueryable<Title> GetVisibleTitles(Guid currentUserId)
     {
         return dbContext.Titles

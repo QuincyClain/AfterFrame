@@ -1,0 +1,205 @@
+:host {
+  display: block;
+  scroll-margin-top: 5rem;
+}
+
+.cast-section {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-header,
+.section-title {
+  display: flex;
+  align-items: center;
+}
+
+.section-header {
+  margin-bottom: 1.25rem;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-title {
+  gap: 0.75rem;
+}
+
+.section-icon {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--accent);
+  font-size: 1.2rem;
+  place-items: center;
+}
+
+.section-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.view-cast-button {
+  display: inline-flex;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.85rem 0.6rem 1rem;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 750;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.view-cast-button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+  transition: transform 160ms ease;
+}
+
+.view-cast-button:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.view-cast-button:hover svg {
+  transform: translateX(0.15rem);
+}
+
+.view-cast-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  outline-offset: 2px;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  letter-spacing: -0.035em;
+}
+
+.cast-list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.cast-card {
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface-elevated);
+}
+
+.cast-photo {
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--surface-soft);
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: 800;
+  place-items: center;
+}
+
+.cast-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cast-copy {
+  display: grid;
+  min-height: 5rem;
+  padding: 0.75rem;
+  align-content: start;
+  gap: 0.2rem;
+}
+
+.cast-copy h3 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+}
+
+.cast-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.cast-placeholder .cast-photo {
+  background: linear-gradient(120deg, var(--surface-soft), var(--border), var(--surface-soft));
+}
+
+.placeholder-line {
+  display: block;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+}
+
+.placeholder-name {
+  width: 78%;
+}
+
+.placeholder-role {
+  width: 55%;
+}
+
+.cast-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 2rem 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 72rem) {
+  .cast-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 42rem) {
+  .cast-list {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .cast-card {
+    min-width: 9rem;
+    flex: 0 0 9rem;
+    scroll-snap-align: start;
+  }
+}

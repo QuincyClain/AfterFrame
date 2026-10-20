@@ -29,3 +29,13 @@ public sealed record CatalogTitleDetails(
     TitlePublicationStatus PublicationStatus,
     string? ExternalSource,
     IReadOnlyList<string> Genres);
+
+public sealed record CatalogTitleExternalReference(
+    string? ExternalSource,
+    string? ExternalId);
+
+public sealed record CatalogCastMember(
+    string Id,
+    string Name,
+    string? Character,
+    string? ProfilePath);
