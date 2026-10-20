@@ -3,6 +3,8 @@ using AfterFrame.Application.Catalog.GetTitleDetails;
 using AfterFrame.Application.Catalog.GetTitleCast;
 using AfterFrame.Application.Catalog.GetTitleMedia;
 using AfterFrame.Application.Catalog.GetTitleRecommendations;
+using AfterFrame.Application.Reviews.GetTitleReviews;
+using AfterFrame.Application.Reviews.Models;
 using AfterFrame.Application.Catalog.Models;
 using AfterFrame.Application.Common.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +15,7 @@ namespace AfterFrame.Api.Controllers;
 [Route("api/catalog")]
 public sealed class CatalogController(GetCatalogService getCatalog, GetTitleDetailsService getTitleDetails,
     GetTitleCastService getTitleCast, GetTitleMediaService getTitleMedia, 
-    GetTitleRecommendationsService getTitleRecommendations) : ControllerBase
+    GetTitleRecommendationsService getTitleRecommendations, GetTitleReviewsService getTitleReviews) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<PagedResult<CatalogTitleSummary>>> Get([FromQuery] CatalogQuery query, CancellationToken ct)
@@ -51,6 +53,14 @@ public sealed class CatalogController(GetCatalogService getCatalog, GetTitleDeta
     public async Task<ActionResult<IReadOnlyList<CatalogTitleSummary>>> GetRecommendations(Guid titleId, CancellationToken ct)
     {
         var result = await getTitleRecommendations.ExecuteAsync(titleId, ct);
+
+        return Ok(result);
+    }
+    
+    [HttpGet("{titleId:guid}/reviews")]
+    public async Task<ActionResult<TitleReviewsSummary>> GetReviews(Guid titleId, CancellationToken ct)
+    {
+        var result = await getTitleReviews.ExecuteAsync(titleId, ct);
 
         return Ok(result);
     }
