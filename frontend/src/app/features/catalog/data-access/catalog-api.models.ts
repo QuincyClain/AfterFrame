@@ -51,3 +51,24 @@ export interface CatalogCastMember {
   readonly character: string | null;
   readonly profilePath: string | null;
 }
+
+export interface CatalogVideo {
+  readonly id: string;
+  readonly name: string;
+  readonly site: string;
+  readonly key: string;
+  readonly type: string;
+  readonly official: boolean;
+}
+
+export interface CatalogMediaImage {
+  readonly path: string;
+  readonly width: number;
+  readonly height: number;
+}
+
+export interface CatalogTitleMedia {
+  readonly trailer: CatalogVideo | null;
+  readonly backdrops: readonly CatalogMediaImage[];
+  readonly posters: readonly CatalogMediaImage[];
+}

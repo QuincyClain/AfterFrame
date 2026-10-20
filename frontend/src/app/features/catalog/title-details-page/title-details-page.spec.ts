@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { CatalogApi } from '../data-access/catalog-api';
-import { CatalogTitleDetails } from '../data-access/catalog-api.models';
+import { CatalogTitleDetails, CatalogTitleMedia } from '../data-access/catalog-api.models';
 import { TitleDetailsPage } from './title-details-page';
 
 describe('TitleDetailsPage', () => {
@@ -30,6 +30,21 @@ describe('TitleDetailsPage', () => {
     genres: ['Adventure', 'Animation', 'Family'],
   };
 
+  const media: CatalogTitleMedia = {
+    trailer: {
+      id: 'trailer-1',
+      name: 'Official Trailer',
+      site: 'YouTube',
+      key: 'example-video-key',
+      type: 'Trailer',
+      official: true,
+    },
+    backdrops: [],
+    posters: [],
+  };
+
+  const getTitleMedia = vi.fn(() => of(media));
+
   const getTitleCast = vi.fn(() =>
     of([
       {
@@ -46,6 +61,8 @@ describe('TitleDetailsPage', () => {
   beforeEach(async () => {
     getTitleById.mockReset();
     getTitleById.mockReturnValue(of(title));
+    getTitleMedia.mockReset();
+    getTitleMedia.mockReturnValue(of(media));
 
     await TestBed.configureTestingModule({
       imports: [TitleDetailsPage],
@@ -56,6 +73,7 @@ describe('TitleDetailsPage', () => {
           useValue: {
             getTitleById,
             getTitleCast,
+            getTitleMedia,
           },
         },
       ],
@@ -96,6 +114,21 @@ describe('TitleDetailsPage', () => {
     );
     expect(getTitleCast).toHaveBeenCalledWith(titleId);
     expect(element.textContent).toContain('Hayao Miyazaki');
+    expect(getTitleMedia).toHaveBeenCalledWith(titleId);
+
+    const trailerButton = Array.from(element.querySelectorAll<HTMLButtonElement>('button')).find(
+      (button) => button.textContent?.includes('Play trailer'),
+    );
+
+    expect(trailerButton).toBeTruthy();
+
+    trailerButton?.click();
+    fixture.detectChanges();
+
+    expect(element.querySelector('.trailer-dialog')).toBeTruthy();
+    expect(element.querySelector('iframe')?.getAttribute('title')).toBe('Official Trailer');
+    expect(element.textContent).toContain('Trailer & Media');
+    expect(element.textContent).toContain('Official Trailer');
   });
 
   it('should render a not-found state for an unavailable title', async () => {

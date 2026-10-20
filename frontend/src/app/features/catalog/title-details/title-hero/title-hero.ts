@@ -12,6 +12,7 @@ import { CatalogTitleDetails } from '../../data-access/catalog-api.models';
 })
 export class TitleHero {
   readonly title = input.required<CatalogTitleDetails>();
+  readonly trailerAvailable = input(false);
 
   readonly addToLibrary = output<void>();
   readonly addToFavourites = output<void>();

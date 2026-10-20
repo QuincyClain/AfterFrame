@@ -7,6 +7,7 @@ import {
   CatalogTitleDetails,
   CatalogTitleSummary,
   PagedResult,
+  CatalogTitleMedia,
 } from './catalog-api.models';
 
 @Injectable({
@@ -34,5 +35,9 @@ export class CatalogApi {
 
   getTitleCast(titleId: string): Observable<readonly CatalogCastMember[]> {
     return this.http.get<readonly CatalogCastMember[]>(`${this.baseUrl}/${titleId}/cast`);
+  }
+
+  getTitleMedia(titleId: string): Observable<CatalogTitleMedia> {
+    return this.http.get<CatalogTitleMedia>(`${this.baseUrl}/${titleId}/media`);
   }
 }

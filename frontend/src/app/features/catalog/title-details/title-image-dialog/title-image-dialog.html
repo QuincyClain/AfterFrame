@@ -1,0 +1,63 @@
+<div class="image-overlay" (click)="closed.emit()">
+  <section
+    class="image-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="image-dialog-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="dialog-header">
+      <div>
+        <p>Media gallery</p>
+        <h2 id="image-dialog-title">{{ titleName() }}</h2>
+      </div>
+
+      <button
+        class="close-button"
+        type="button"
+        aria-label="Close image viewer"
+        autofocus
+        (click)="closed.emit()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="image-stage">
+      @if (canNavigate()) {
+        <button
+          class="navigation-button previous-button"
+          type="button"
+          aria-label="Previous image"
+          (click)="previous()"
+        >
+          ‹
+        </button>
+      }
+
+      @if (imageUrl(); as url) {
+        <img [src]="url" [alt]="titleName() + ' media image'" />
+      }
+
+      @if (canNavigate()) {
+        <button
+          class="navigation-button next-button"
+          type="button"
+          aria-label="Next image"
+          (click)="next()"
+        >
+          ›
+        </button>
+      }
+    </div>
+
+    @if (currentImage(); as image) {
+      <footer>
+        <span>{{ image.width }} × {{ image.height }}</span>
+        <span> {{ currentIndex() + 1 }} / {{ images().length }} </span>
+      </footer>
+    }
+  </section>
+</div>

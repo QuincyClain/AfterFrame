@@ -27,7 +27,12 @@
     </div>
   } @else if (title(); as item) {
     <article class="title-details">
-      <app-title-hero id="overview" [title]="item" />
+      <app-title-hero
+        id="overview"
+        [title]="item"
+        [trailerAvailable]="trailer() !== null"
+        (playTrailer)="openTrailer()"
+      />
 
       <app-title-section-nav [showEpisodes]="item.type === 'Series'" />
 
@@ -40,11 +45,38 @@
               [isLoading]="isCastLoading()"
               [loadFailed]="castLoadFailed()"
             />
+            <app-title-media-section
+              id="media"
+              [media]="media()"
+              [titleName]="item.name"
+              [isLoading]="isMediaLoading()"
+              [loadFailed]="mediaLoadFailed()"
+              (playTrailer)="openTrailer()"
+              (openImage)="openMediaImage($event)"
+            />
           </div>
 
           <app-title-facts id="details" [title]="item" />
         </div>
       </section>
     </article>
+  }
+  @if (isTrailerOpen()) {
+    @if (trailer(); as currentTrailer) {
+      <app-title-trailer-dialog
+        [videoKey]="currentTrailer.key"
+        [title]="currentTrailer.name"
+        (closed)="closeTrailer()"
+      />
+    }
+  }
+
+  @if (selectedMediaImage(); as selectedImage) {
+    <app-title-image-dialog
+      [images]="mediaImages()"
+      [initialPath]="selectedImage.path"
+      [titleName]="title()?.name ?? 'Media image'"
+      (closed)="closeMediaImage()"
+    />
   }
 </main>

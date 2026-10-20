@@ -80,10 +80,12 @@
             Rate & review
           </button>
 
-          <button class="hero-action" type="button" (click)="playTrailer.emit()">
-            <span aria-hidden="true">▶</span>
-            Play trailer
-          </button>
+          @if (trailerAvailable()) {
+            <button class="hero-action" type="button" (click)="playTrailer.emit()">
+              <span aria-hidden="true">▶</span>
+              Play trailer
+            </button>
+          }
         </div>
 
         @if (title().externalSource === 'tmdb') {

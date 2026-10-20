@@ -1,1 +1,95 @@
-<p>title-media-section works!</p>
+<section class="media-section" aria-labelledby="media-heading">
+  <header class="section-header">
+    <div class="section-title">
+      <span class="section-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M7 5v14M17 5v14M3 9h4M3 15h4M17 9h4M17 15h4" />
+        </svg>
+      </span>
+
+      <div>
+        <h2 id="media-heading">Trailer & Media</h2>
+        <p>Videos, backdrops, and artwork</p>
+      </div>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <div class="media-layout media-skeleton" aria-hidden="true">
+      <div class="trailer-card"></div>
+
+      <div class="media-preview-grid">
+        @for (placeholder of [1, 2, 3, 4]; track placeholder) {
+          <div class="media-preview"></div>
+        }
+      </div>
+    </div>
+  } @else if (loadFailed()) {
+    <p class="media-empty" role="status">Media information could not be loaded.</p>
+  } @else if (hasMedia()) {
+    <div
+      class="media-layout"
+      [class.without-trailer]="!media()?.trailer"
+      [class.trailer-only]="!hasImages()"
+    >
+      @if (media()?.trailer; as trailer) {
+        <button
+          class="trailer-card"
+          type="button"
+          [attr.aria-label]="'Play ' + trailer.name"
+          (click)="playTrailer.emit()"
+        >
+          @if (trailerImageUrl(); as imageUrl) {
+            <img [src]="imageUrl" [alt]="titleName() + ' trailer backdrop'" />
+          }
+
+          <span class="trailer-overlay">
+            <span class="play-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m9 7 8 5-8 5z" />
+              </svg>
+            </span>
+
+            <span class="trailer-copy">
+              <small>{{ trailer.official ? 'Official trailer' : trailer.type }}</small>
+              <strong>{{ trailer.name }}</strong>
+            </span>
+          </span>
+        </button>
+      }
+
+      @if (hasImages()) {
+        <div class="media-preview-grid">
+          @for (image of visibleBackdrops(); track image.path) {
+            <button
+              class="media-preview"
+              type="button"
+              data-media-image
+              [attr.aria-label]="'View ' + titleName() + ' backdrop'"
+              (click)="openImage.emit(image)"
+            >
+              <img [src]="imageUrl(image)" [alt]="titleName() + ' backdrop'" loading="lazy" />
+              <span class="media-label">Backdrop</span>
+            </button>
+          }
+
+          @for (image of visiblePosters(); track image.path) {
+            <button
+              class="media-preview"
+              type="button"
+              data-media-image
+              [attr.aria-label]="'View ' + titleName() + ' poster artwork'"
+              (click)="openImage.emit(image)"
+            >
+              <img [src]="imageUrl(image)" [alt]="titleName() + ' poster artwork'" loading="lazy" />
+              <span class="media-label">Poster</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="media-empty" role="status">No videos or images are available for this title.</p>
+  }
+</section>
