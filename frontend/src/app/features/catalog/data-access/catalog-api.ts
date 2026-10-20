@@ -40,4 +40,10 @@ export class CatalogApi {
   getTitleMedia(titleId: string): Observable<CatalogTitleMedia> {
     return this.http.get<CatalogTitleMedia>(`${this.baseUrl}/${titleId}/media`);
   }
+
+  getTitleRecommendations(titleId: string): Observable<readonly CatalogTitleSummary[]> {
+    return this.http.get<readonly CatalogTitleSummary[]>(
+      `${this.baseUrl}/${titleId}/recommendations`,
+    );
+  }
 }

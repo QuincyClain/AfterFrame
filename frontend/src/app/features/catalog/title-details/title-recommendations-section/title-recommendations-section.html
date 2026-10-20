@@ -1,1 +1,69 @@
-<p>title-recommendations-section works!</p>
+<section class="recommendations-section" aria-labelledby="recommendations-heading">
+  <header class="section-header">
+    <div class="section-title">
+      <span class="section-icon" aria-hidden="true">✦</span>
+
+      <div>
+        <h2 id="recommendations-heading">You might also like</h2>
+        <p>More stories based on this title</p>
+      </div>
+    </div>
+
+    @if (!isLoading() && hasOverflow()) {
+      <div class="scroll-controls" aria-label="Recommendation controls">
+        <button
+          type="button"
+          aria-label="Show previous recommendations"
+          title="Previous"
+          (click)="scroll(-1)"
+        >
+          <span aria-hidden="true">←</span>
+        </button>
+
+        <button
+          type="button"
+          aria-label="Show next recommendations"
+          title="Next"
+          (click)="scroll(1)"
+        >
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    }
+  </header>
+
+  @if (isLoading()) {
+    <div class="recommendations-track skeleton-track" aria-hidden="true">
+      @for (item of skeletonItems; track item) {
+        <article class="recommendation-skeleton">
+          <div class="skeleton-poster"></div>
+
+          <div class="skeleton-content">
+            <span class="skeleton-line skeleton-meta"></span>
+            <span class="skeleton-line skeleton-title"></span>
+            <span class="skeleton-line skeleton-rating"></span>
+          </div>
+        </article>
+      }
+    </div>
+  } @else if (loadFailed()) {
+    <p class="recommendations-state" role="status">
+      Recommendations could not be loaded.
+    </p>
+  } @else if (recommendations().length > 0) {
+    <div
+      #recommendationsTrack
+      class="recommendations-track"
+      tabindex="0"
+      aria-label="Recommended titles"
+    >
+      @for (recommendation of recommendations(); track recommendation.id) {
+        <app-title-card [title]="recommendation" />
+      }
+    </div>
+  } @else {
+    <p class="recommendations-state" role="status">
+      There are no recommendations for this title yet.
+    </p>
+  }
+</section>

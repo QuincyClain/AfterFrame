@@ -40,11 +40,15 @@
         <div class="title-body-shell">
           <div class="title-main-column">
             <app-title-activity-card [titleType]="item.type" />
+
             <app-title-cast-section
               [cast]="cast()"
               [isLoading]="isCastLoading()"
               [loadFailed]="castLoadFailed()"
             />
+          </div>
+
+          <div class="title-full-width">
             <app-title-media-section
               id="media"
               [media]="media()"
@@ -53,6 +57,12 @@
               [loadFailed]="mediaLoadFailed()"
               (playTrailer)="openTrailer()"
               (openImage)="openMediaImage($event)"
+            />
+
+            <app-title-recommendations-section
+              [recommendations]="recommendations()"
+              [isLoading]="isRecommendationsLoading()"
+              [loadFailed]="recommendationsLoadFailed()"
             />
           </div>
 

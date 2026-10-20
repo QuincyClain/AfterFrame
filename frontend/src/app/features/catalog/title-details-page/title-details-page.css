@@ -93,10 +93,36 @@
 .title-main-column {
   display: grid;
   min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
   gap: 2rem;
 }
 
+.title-main-column > *,
+.title-full-width > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.title-full-width {
+  display: grid;
+  min-width: 0;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  gap: 2rem;
+}
+
+.title-main-column > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
 app-title-facts {
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 1;
   scroll-margin-top: 5rem;
 }
 
@@ -115,5 +141,12 @@ app-title-facts {
 @media (max-width: 56rem) {
   .title-body-shell {
     grid-template-columns: 1fr;
+  }
+
+  .title-main-column,
+  .title-full-width,
+  app-title-facts {
+    grid-column: 1;
+    grid-row: auto;
   }
 }

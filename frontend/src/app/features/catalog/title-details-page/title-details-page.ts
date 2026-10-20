@@ -12,10 +12,12 @@ import {
   CatalogMediaImage,
   CatalogTitleDetails,
   CatalogTitleMedia,
+  CatalogTitleSummary,
 } from '../data-access/catalog-api.models';
 import { TitleTrailerDialog } from '../title-details/title-trailer-dialog/title-trailer-dialog';
 import { TitleMediaSection } from '../title-details/title-media-section/title-media-section';
 import { TitleImageDialog } from '../title-details/title-image-dialog/title-image-dialog';
+import { TitleRecommendationsSection } from '../title-details/title-recommendations-section/title-recommendations-section';
 
 @Component({
   selector: 'app-title-details-page',
@@ -29,6 +31,7 @@ import { TitleImageDialog } from '../title-details/title-image-dialog/title-imag
     TitleTrailerDialog,
     TitleMediaSection,
     TitleImageDialog,
+    TitleRecommendationsSection,
   ],
   templateUrl: './title-details-page.html',
   styleUrl: './title-details-page.css',
@@ -51,6 +54,9 @@ export class TitleDetailsPage {
     ...(this.media()?.backdrops ?? []),
     ...(this.media()?.posters ?? []),
   ]);
+  protected readonly recommendations = signal<readonly CatalogTitleSummary[]>([]);
+  protected readonly isRecommendationsLoading = signal(true);
+  protected readonly recommendationsLoadFailed = signal(false);
   protected readonly isCastLoading = signal(true);
   protected readonly castLoadFailed = signal(false);
   protected readonly isLoading = signal(true);
@@ -77,6 +83,9 @@ export class TitleDetailsPage {
       this.mediaLoadFailed.set(false);
       this.isTrailerOpen.set(false);
       this.selectedMediaImage.set(null);
+      this.recommendations.set([]);
+      this.isRecommendationsLoading.set(true);
+      this.recommendationsLoadFailed.set(false);
 
       const titleSubscription = this.catalogApi.getTitleById(titleId).subscribe({
         next: (title) => {
@@ -117,10 +126,24 @@ export class TitleDetailsPage {
         },
       });
 
+      const recommendationsSubscription = this.catalogApi
+        .getTitleRecommendations(titleId)
+        .subscribe({
+          next: (recommendations) => {
+            this.recommendations.set(recommendations);
+            this.isRecommendationsLoading.set(false);
+          },
+          error: () => {
+            this.isRecommendationsLoading.set(false);
+            this.recommendationsLoadFailed.set(true);
+          },
+        });
+
       onCleanup(() => {
         titleSubscription.unsubscribe();
         castSubscription.unsubscribe();
         mediaSubscription.unsubscribe();
+        recommendationsSubscription.unsubscribe();
       });
     });
   }

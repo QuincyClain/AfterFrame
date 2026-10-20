@@ -4,7 +4,11 @@ import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { CatalogApi } from '../data-access/catalog-api';
-import { CatalogTitleDetails, CatalogTitleMedia } from '../data-access/catalog-api.models';
+import {
+  CatalogTitleDetails,
+  CatalogTitleMedia,
+  CatalogTitleSummary,
+} from '../data-access/catalog-api.models';
 import { TitleDetailsPage } from './title-details-page';
 
 describe('TitleDetailsPage', () => {
@@ -43,6 +47,23 @@ describe('TitleDetailsPage', () => {
     posters: [],
   };
 
+  const recommendations: readonly CatalogTitleSummary[] = [
+    {
+      id: '0199f3f4-7c00-7000-8000-000000000102',
+      name: 'Princess Mononoke',
+      type: 'Movie',
+      tags: 'Animation, Anime',
+      releaseYear: 1997,
+      posterPath: '/cMYCDADoLKLbB83g4WnJegaZimC.jpg',
+      externalRating: 8.3,
+      externalVoteCount: 9335,
+      publicationStatus: 'Published',
+      genres: ['Adventure', 'Animation', 'Fantasy'],
+    },
+  ];
+
+  const getTitleRecommendations = vi.fn(() => of(recommendations));
+
   const getTitleMedia = vi.fn(() => of(media));
 
   const getTitleCast = vi.fn(() =>
@@ -63,6 +84,8 @@ describe('TitleDetailsPage', () => {
     getTitleById.mockReturnValue(of(title));
     getTitleMedia.mockReset();
     getTitleMedia.mockReturnValue(of(media));
+    getTitleRecommendations.mockReset();
+    getTitleRecommendations.mockReturnValue(of(recommendations));
 
     await TestBed.configureTestingModule({
       imports: [TitleDetailsPage],
@@ -74,6 +97,7 @@ describe('TitleDetailsPage', () => {
             getTitleById,
             getTitleCast,
             getTitleMedia,
+            getTitleRecommendations,
           },
         },
       ],
@@ -129,6 +153,10 @@ describe('TitleDetailsPage', () => {
     expect(element.querySelector('iframe')?.getAttribute('title')).toBe('Official Trailer');
     expect(element.textContent).toContain('Trailer & Media');
     expect(element.textContent).toContain('Official Trailer');
+    expect(getTitleRecommendations).toHaveBeenCalledWith(titleId);
+    expect(getTitleRecommendations).toHaveBeenCalledWith(titleId);
+    expect(element.textContent).toContain('You might also like');
+    expect(element.textContent).toContain('Princess Mononoke');
   });
 
   it('should render a not-found state for an unavailable title', async () => {
