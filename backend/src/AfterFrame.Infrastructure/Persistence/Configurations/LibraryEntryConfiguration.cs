@@ -59,6 +59,19 @@ internal sealed class LibraryEntryConfiguration
         builder.Property(entry => entry.Review)
             .HasColumnName("review")
             .HasMaxLength(2000);
+        
+        builder.Property(entry => entry.Vibe)
+            .HasColumnName("vibe")
+            .HasConversion<string>()
+            .HasMaxLength(30);
+
+        builder.Property(entry => entry.ContainsSpoilers)
+            .HasColumnName("contains_spoilers")
+            .HasDefaultValue(false)
+            .IsRequired();
+
+        builder.Property(entry => entry.ReviewedAtUtc)
+            .HasColumnName("reviewed_at_utc");
 
         builder.Property(entry => entry.LastWatchedSeason)
             .HasColumnName("last_watched_season");
