@@ -39,3 +39,21 @@ public sealed record CatalogCastMember(
     string Name,
     string? Character,
     string? ProfilePath);
+
+public sealed record CatalogTitleMedia(
+    CatalogVideo? Trailer,
+    IReadOnlyList<CatalogMediaImage> Backdrops,
+    IReadOnlyList<CatalogMediaImage> Posters);
+
+public sealed record CatalogVideo(
+    string Id,
+    string Name,
+    string Site,
+    string Key,
+    string Type,
+    bool Official);
+
+public sealed record CatalogMediaImage(
+    string Path,
+    int Width,
+    int Height);

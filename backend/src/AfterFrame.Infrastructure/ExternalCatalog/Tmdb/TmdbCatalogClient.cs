@@ -76,22 +76,38 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
 
     public async Task<IReadOnlyList<ExternalCatalogCastMember>> GetCastAsync(string externalId, CancellationToken ct = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(externalId);
+        var (mediaType, tmdbId) = ParseExternalId(externalId);
 
-        var parts = externalId.Split(':', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
-        if (parts.Length != 2 || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out var tmdbId) || tmdbId <= 0)
-        {
-            throw new ArgumentException($"Unsupported TMDB identifier '{externalId}'.", nameof(externalId));
-        }
-
-        return parts[0] switch
+        return mediaType switch
         {
             "movie" => await GetMovieCastAsync(tmdbId, ct),
             "tv" => await GetSeriesCastAsync(tmdbId, ct),
             _ => throw new ArgumentException(
-                $"Unsupported TMDB media type '{parts[0]}'.", nameof(externalId))
+                $"Unsupported TMDB media type '{mediaType}'.", nameof(externalId))
         };
+    }
+
+    public async Task<ExternalCatalogMedia> GetMediaAsync(string externalId, CancellationToken ct = default)
+    {
+        var (mediaType, tmdbId) = ParseExternalId(externalId);
+
+        if (mediaType is not "movie" and not "tv")
+        {
+            throw new ArgumentException($"Unsupported TMDB media type '{mediaType}'.", nameof(externalId));
+        }
+
+        var videosTask = GetAsync<TmdbVideosResponse>($"{mediaType}/{tmdbId}/videos?language={Language}", ct);
+
+        var imagesTask = GetAsync<TmdbImagesResponse>(
+            $"{mediaType}/{tmdbId}/images" +
+            $"?include_image_language={ImageLanguage},null", ct);
+
+        await Task.WhenAll(videosTask, imagesTask);
+
+        var videosResponse = await videosTask;
+        var imagesResponse = await imagesTask;
+
+        return new ExternalCatalogMedia(MapVideos(videosResponse.Results), MapImages(imagesResponse.Backdrops, 12), MapImages(imagesResponse.Posters, 8));
     }
 
     private async Task<IReadOnlyList<ExternalCatalogCastMember>> GetMovieCastAsync(int tmdbId, CancellationToken ct)
@@ -144,6 +160,56 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
             : null;
     }
 
+    private static IReadOnlyList<ExternalCatalogVideo> MapVideos(
+        IEnumerable<TmdbVideo> videos)
+    {
+        return videos
+            .Where(video =>
+                video.Site.Equals(
+                    "YouTube",
+                    StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(video.Key))
+            .OrderByDescending(video => video.Official)
+            .ThenBy(video => GetVideoTypePriority(video.Type))
+            .ThenByDescending(video => video.PublishedAt)
+            .Take(10)
+            .Select(video => new ExternalCatalogVideo(
+                video.Id,
+                NormalizeOptionalText(video.Name) ?? "Video",
+                video.Site.Trim(),
+                video.Key.Trim(),
+                NormalizeOptionalText(video.Type) ?? "Video",
+                video.Official,
+                video.PublishedAt))
+            .ToArray();
+    }
+
+    private static IReadOnlyList<ExternalCatalogImage> MapImages(IEnumerable<TmdbImage> images, int limit)
+    {
+        return images
+            .Where(image => !string.IsNullOrWhiteSpace(image.FilePath))
+            .OrderByDescending(image => image.VoteCount)
+            .ThenByDescending(image => image.VoteAverage)
+            .Take(limit)
+            .Select(image => new ExternalCatalogImage(
+                image.FilePath!.Trim(),
+                image.Width,
+                image.Height))
+            .ToArray();
+    }
+
+    private static int GetVideoTypePriority(string type)
+    {
+        return type switch
+        {
+            "Trailer" => 0,
+            "Teaser" => 1,
+            "Clip" => 2,
+            "Featurette" => 3,
+            _ => 4
+        };
+    }
+
     private async Task<IReadOnlyDictionary<int, ExternalCatalogGenre>> GetGenresAsync(
         string path,
         CancellationToken ct)
@@ -155,6 +221,20 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
         return response.Genres.ToDictionary(genre => genre.Id, genre => new ExternalCatalogGenre(
                 genre.Id.ToString(CultureInfo.InvariantCulture),
                 genre.Name));
+    }
+
+    private static (string MediaType, int Id) ParseExternalId(string externalId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(externalId);
+
+        var parts = externalId.Split(':', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length != 2 || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out var tmdbId) || tmdbId <= 0)
+        {
+            throw new ArgumentException($"Unsupported TMDB identifier '{externalId}'.", nameof(externalId));
+        }
+
+        return (parts[0], tmdbId);
     }
 
     private static string? NormalizeOptionalText(string? value)
@@ -264,4 +344,14 @@ internal sealed class TmdbCatalogClient : IExternalCatalogClient
     }
 
     private string Language => Uri.EscapeDataString(_options.Language);
+
+    private string ImageLanguage
+    {
+        get
+        {
+            var language = _options.Language.Split('-', 2)[0];
+
+            return Uri.EscapeDataString(language);
+        }
+    }
 }

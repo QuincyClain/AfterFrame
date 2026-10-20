@@ -142,3 +142,60 @@ internal sealed class TmdbSeriesCastRole
     [JsonPropertyName("character")]
     public string Character { get; init; } = string.Empty;
 }
+
+internal sealed class TmdbVideosResponse
+{
+    [JsonPropertyName("results")]
+    public List<TmdbVideo> Results { get; init; } = [];
+}
+
+internal sealed class TmdbVideo
+{
+    [JsonPropertyName("id")]
+    public string Id { get; init; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("key")]
+    public string Key { get; init; } = string.Empty;
+
+    [JsonPropertyName("site")]
+    public string Site { get; init; } = string.Empty;
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; } = string.Empty;
+
+    [JsonPropertyName("official")]
+    public bool Official { get; init; }
+
+    [JsonPropertyName("published_at")]
+    public DateTimeOffset? PublishedAt { get; init; }
+}
+
+internal sealed class TmdbImagesResponse
+{
+    [JsonPropertyName("backdrops")]
+    public List<TmdbImage> Backdrops { get; init; } = [];
+
+    [JsonPropertyName("posters")]
+    public List<TmdbImage> Posters { get; init; } = [];
+}
+
+internal sealed class TmdbImage
+{
+    [JsonPropertyName("file_path")]
+    public string? FilePath { get; init; }
+
+    [JsonPropertyName("width")]
+    public int Width { get; init; }
+
+    [JsonPropertyName("height")]
+    public int Height { get; init; }
+
+    [JsonPropertyName("vote_average")]
+    public decimal VoteAverage { get; init; }
+
+    [JsonPropertyName("vote_count")]
+    public int VoteCount { get; init; }
+}
