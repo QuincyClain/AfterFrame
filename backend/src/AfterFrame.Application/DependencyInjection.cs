@@ -5,6 +5,7 @@ using AfterFrame.Application.Catalog.GetCatalog;
 using AfterFrame.Application.Catalog.GetTitleDetails;
 using AfterFrame.Application.Catalog.GetTitleCast;
 using AfterFrame.Application.Catalog.GetTitleMedia;
+using AfterFrame.Application.Catalog.GetTitleRecommendations;
 
 namespace AfterFrame.Application;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<GetTitleDetailsService>();
         services.AddScoped<GetTitleCastService>();
         services.AddScoped<GetTitleMediaService>();
+        services.AddScoped<GetTitleRecommendationsService>();
 
         return services;
     }

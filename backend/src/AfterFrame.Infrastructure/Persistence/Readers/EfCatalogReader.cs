@@ -99,6 +99,64 @@ internal sealed class EfCatalogReader(AfterFrameDbContext dbContext) : ICatalogR
                 title.Genres.OrderBy(genre => genre.Name).Select(genre => genre.Name).ToArray()))
             .SingleOrDefaultAsync(ct);
     }
+    
+    public async Task<IReadOnlyList<CatalogTitleSummary>> GetRecommendationsAsync(Guid titleId, Guid currentUserId, int limit,
+        CancellationToken ct = default)
+    {
+        if (limit <= 0)
+        {
+            return [];
+        }
+
+        var target = await GetVisibleTitles(currentUserId)
+            .Where(title => title.Id == titleId)
+            .Select(title => new
+            {
+                title.Type,
+                title.Tags,
+                GenreIds = title.Genres
+                    .Select(genre => genre.Id)
+                    .ToArray()
+            })
+            .SingleOrDefaultAsync(ct);
+
+        if (target is null)
+        {
+            return [];
+        }
+
+        var recommendations = GetVisibleTitles(currentUserId)
+            .Where(title => title.Id != titleId)
+            .Where(title => title.Type == target.Type);
+
+        if (target.GenreIds.Length > 0)
+        {
+            recommendations = recommendations.Where(title => title.Genres.Any(genre => target.GenreIds.Contains(genre.Id)));
+        }
+
+        return await recommendations
+            .OrderByDescending(title => title.Tags == target.Tags ? 1 : 0)
+            .ThenByDescending(title => title.Genres.Count(genre => target.GenreIds.Contains(genre.Id)))
+            .ThenByDescending(title => title.ExternalRating ?? -1m)
+            .ThenByDescending(title => title.ExternalVoteCount)
+            .ThenBy(title => title.Name)
+            .Take(limit)
+            .Select(title => new CatalogTitleSummary(
+                title.Id,
+                title.Name,
+                title.Type,
+                title.Tags,
+                title.ReleaseYear,
+                title.PosterPath,
+                title.ExternalRating,
+                title.ExternalVoteCount,
+                title.PublicationStatus,
+                title.Genres
+                    .OrderBy(genre => genre.Name)
+                    .Select(genre => genre.Name)
+                    .ToArray()))
+            .ToArrayAsync(ct);
+    }
 
     public Task<CatalogTitleExternalReference?> GetExternalReferenceAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default)
     {

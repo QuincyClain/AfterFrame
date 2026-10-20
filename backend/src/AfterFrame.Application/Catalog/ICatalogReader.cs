@@ -10,4 +10,6 @@ public interface ICatalogReader
     Task<CatalogTitleDetails?> GetByIdAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default);
 
     Task<CatalogTitleExternalReference?> GetExternalReferenceAsync(Guid titleId, Guid currentUserId, CancellationToken ct = default);
+    
+    Task<IReadOnlyList<CatalogTitleSummary>> GetRecommendationsAsync(Guid titleId, Guid currentUserId, int limit, CancellationToken ct = default);
 }
